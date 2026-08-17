@@ -1,0 +1,32 @@
+{
+	"name": "skr-connect-example-web",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "tsc -p tsconfig.json && vite build",
+		"dev": "vite",
+		"e2e": "node e2e/run.ts",
+		"preview": "vite preview",
+		"tunnel:start": "ngrok http 3010"
+	},
+	"dependencies": {
+		"@fontsource-variable/google-sans-code": "^5.3.0",
+		"@fontsource-variable/google-sans-flex": "^5.3.1",
+		"@skr-connect/ui": "workspace:*",
+		"@skr-connect/wallet-standard": "workspace:*",
+		"@wallet-standard/app": "^1.1.0",
+		"@wallet-standard/base": "^1.1.1",
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4"
+	},
+	"devDependencies": {
+		"@solana/wallet-standard-features": "^1.3.0",
+		"@types/react": "^19.2.9",
+		"@types/react-dom": "^19.2.3",
+		"@vitejs/plugin-react": "^5.1.4",
+		"@wallet-standard/features": "^1.1.1",
+		"ngrok": "^4.3.1",
+		"vite": "^7.3.4"
+	}
+}
