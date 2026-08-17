@@ -13,8 +13,8 @@
 	"dependencies": {
 		"@fontsource-variable/google-sans-code": "^5.3.0",
 		"@fontsource-variable/google-sans-flex": "^5.3.1",
-		"@skr-connect/ui": "workspace:*",
-		"@skr-connect/wallet-standard": "workspace:*",
+		"@solana-mobile/seeker-connect-ui": "workspace:*",
+		"@solana-mobile/seeker-connect-wallet-standard": "workspace:*",
 		"@wallet-standard/app": "^1.1.0",
 		"@wallet-standard/base": "^1.1.1",
 		"react": "^19.2.4",

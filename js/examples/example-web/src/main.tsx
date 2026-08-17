@@ -2,8 +2,8 @@
 import '@fontsource-variable/google-sans-flex';
 import '@fontsource-variable/google-sans-code';
 
-import { defineSeekerConnectElements } from '@skr-connect/ui';
-import { registerSeekerConnect } from '@skr-connect/wallet-standard';
+import { defineSeekerConnectElements } from '@solana-mobile/seeker-connect-ui';
+import { registerSeekerConnect } from '@solana-mobile/seeker-connect-wallet-standard';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 

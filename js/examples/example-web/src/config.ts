@@ -9,7 +9,7 @@
  *   ?timeout=<ms>       association timeout override
  *   ?e2e                test mode (see below)
  */
-import type { SeekerChain } from '@skr-connect/wallet-standard';
+import type { SeekerChain } from '@solana-mobile/seeker-connect-wallet-standard';
 
 const params = new URLSearchParams(window.location.search);
 

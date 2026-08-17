@@ -4,8 +4,8 @@
  */
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import type { SeekerConnectConfig } from '@skr-connect/core';
-import { SeekerConnectError, SeekerConnectErrorCode } from '@skr-connect/core';
+import type { SeekerConnectConfig } from '@solana-mobile/seeker-connect-core';
+import { SeekerConnectError, SeekerConnectErrorCode } from '@solana-mobile/seeker-connect-core';
 import {
 	base58FromUint8Array,
 	base64FromUint8Array,

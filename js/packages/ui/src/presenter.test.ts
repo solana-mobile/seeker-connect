@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { SeekerConnectError, SeekerConnectErrorCode } from '@skr-connect/core';
+import { SeekerConnectError, SeekerConnectErrorCode } from '@solana-mobile/seeker-connect-core';
 
 import { SeekerConnectErrorDialog } from './elements/errorDialog.js';
 import { createSeekerConnectPresenter, defineSeekerConnectElements } from './presenter.js';

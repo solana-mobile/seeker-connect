@@ -4,7 +4,7 @@
  */
 import { base58FromUint8Array } from '@solana-mobile/mobile-wallet-adapter-protocol/encoding';
 
-import { testSeekerLinkContract } from '@skr-connect/core/testing';
+import { testSeekerLinkContract } from '@solana-mobile/seeker-connect-core/testing';
 import {
 	DEFAULT_FAKE_CAPABILITIES,
 	FakeNostrWallet,

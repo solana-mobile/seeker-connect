@@ -1,4 +1,4 @@
-import type { SeekerConnectButton, SeekerConnectButtonVariant } from '@skr-connect/ui';
+import type { SeekerConnectButton, SeekerConnectButtonVariant } from '@solana-mobile/seeker-connect-ui';
 import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 
 declare module 'react' {

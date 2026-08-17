@@ -1,7 +1,7 @@
 /** Seeker Connect's Wallet Standard integration. */
-import type { AuthorizationCache, SeekerConnectConfig, SeekerConnectPresenter, SeekerLink } from '@skr-connect/core';
-import { createSeekerConnectPresenter } from '@skr-connect/ui';
-import { createNostrSeekerLink } from '@skr-connect/web';
+import type { AuthorizationCache, SeekerConnectConfig, SeekerConnectPresenter, SeekerLink } from '@solana-mobile/seeker-connect-core';
+import { createSeekerConnectPresenter } from '@solana-mobile/seeker-connect-ui';
+import { createNostrSeekerLink } from '@solana-mobile/seeker-connect-web';
 import { registerWallet } from '@wallet-standard/wallet';
 
 import { createLocalStorageAuthorizationCache } from './authorizationCache.js';
@@ -15,7 +15,7 @@ export interface RegisterSeekerConnectOptions extends SeekerConnectConfig {
 	seekerLink?: SeekerLink;
 	/** Defaults to a `localStorage`-backed cache. */
 	authorizationCache?: AuthorizationCache;
-	/** Defaults to the `@skr-connect/ui` progress/error UI. */
+	/** Defaults to the `@solana-mobile/seeker-connect-ui` progress/error UI. */
 	presenter?: SeekerConnectPresenter;
 }
 
@@ -48,5 +48,5 @@ export type {
 	SeekerConnectPresenter,
 	SeekerLink,
 	StoredAuthorization,
-} from '@skr-connect/core';
-export { SeekerConnectError, SeekerConnectErrorCode } from '@skr-connect/core';
+} from '@solana-mobile/seeker-connect-core';
+export { SeekerConnectError, SeekerConnectErrorCode } from '@solana-mobile/seeker-connect-core';

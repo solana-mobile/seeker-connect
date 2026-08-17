@@ -1,8 +1,11 @@
 {
-	"name": "@skr-connect/wallet-standard",
-	"version": "0.0.0",
-	"private": true,
+	"name": "@solana-mobile/seeker-connect-wallet-standard",
+	"version": "0.1.0",
 	"type": "module",
+	"files": ["dist"],
+	"publishConfig": {
+		"access": "public"
+	},
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
@@ -13,9 +16,9 @@
 		"build": "tsc -p tsconfig.json"
 	},
 	"dependencies": {
-		"@skr-connect/core": "workspace:*",
-		"@skr-connect/ui": "workspace:*",
-		"@skr-connect/web": "workspace:*",
+		"@solana-mobile/seeker-connect-core": "workspace:*",
+		"@solana-mobile/seeker-connect-ui": "workspace:*",
+		"@solana-mobile/seeker-connect-web": "workspace:*",
 		"@solana/wallet-standard-features": "^1.4.0",
 		"@wallet-standard/base": "^1.1.1",
 		"@wallet-standard/features": "^1.1.1",

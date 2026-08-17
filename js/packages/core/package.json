@@ -1,8 +1,11 @@
 {
-	"name": "@skr-connect/core",
-	"version": "0.0.0",
-	"private": true,
+	"name": "@solana-mobile/seeker-connect-core",
+	"version": "0.1.0",
 	"type": "module",
+	"files": ["dist"],
+	"publishConfig": {
+		"access": "public"
+	},
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",

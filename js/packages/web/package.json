@@ -1,8 +1,11 @@
 {
-	"name": "@skr-connect/web",
-	"version": "0.0.0",
-	"private": true,
+	"name": "@solana-mobile/seeker-connect-web",
+	"version": "0.1.0",
 	"type": "module",
+	"files": ["dist"],
+	"publishConfig": {
+		"access": "public"
+	},
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
@@ -13,7 +16,7 @@
 		"build": "tsc -p tsconfig.json"
 	},
 	"dependencies": {
-		"@skr-connect/core": "workspace:*",
+		"@solana-mobile/seeker-connect-core": "workspace:*",
 		"@solana-mobile/mobile-wallet-adapter-protocol": "^2.3.0"
 	},
 	"devDependencies": {

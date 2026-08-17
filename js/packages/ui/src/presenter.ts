@@ -1,5 +1,5 @@
 /** `SeekerConnectPresenter` backed by the Lit elements in this package. */
-import type { SeekerConnectError, SeekerConnectPresenter } from '@skr-connect/core';
+import type { SeekerConnectError, SeekerConnectPresenter } from '@solana-mobile/seeker-connect-core';
 
 import { SeekerConnectButton } from './elements/connectButton.js';
 import { SeekerConnectErrorDialog } from './elements/errorDialog.js';

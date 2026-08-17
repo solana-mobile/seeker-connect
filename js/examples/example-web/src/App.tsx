@@ -1,5 +1,5 @@
-import { FOOTER_WORDMARK_PATHS, S_MARK_ARC_PATH, S_MARK_PATH } from '@skr-connect/ui';
-import { SeekerConnectWalletName } from '@skr-connect/wallet-standard';
+import { FOOTER_WORDMARK_PATHS, S_MARK_ARC_PATH, S_MARK_PATH } from '@solana-mobile/seeker-connect-ui';
+import { SeekerConnectWalletName } from '@solana-mobile/seeker-connect-wallet-standard';
 import type {
 	SolanaSignAndSendTransactionFeature,
 	SolanaSignInFeature,
@@ -37,7 +37,7 @@ function features(wallet: Wallet): SeekerFeatures {
 	return wallet.features as SeekerFeatures;
 }
 
-/** The brand S-in-arc mark (vectors re-exported by `@skr-connect/ui`). */
+/** The brand S-in-arc mark (vectors re-exported by `@solana-mobile/seeker-connect-ui`). */
 function SeekerMark({ size }: { size: number }) {
 	return (
 		<svg viewBox="138 317 124 124" width={size} height={size} aria-hidden="true">

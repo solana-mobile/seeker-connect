@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import type { StoredAuthorization } from '@skr-connect/core';
+import type { StoredAuthorization } from '@solana-mobile/seeker-connect-core';
 import { createLocalStorageAuthorizationCache, createMemoryAuthorizationCache } from './authorizationCache.js';
 
 const STORED: StoredAuthorization = {

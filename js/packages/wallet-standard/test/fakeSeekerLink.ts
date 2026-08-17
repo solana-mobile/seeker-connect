@@ -1,6 +1,6 @@
 /**
  * In-memory `SeekerLink` double for wallet-standard tests. Implements the
- * port shape directly; protocol correctness is covered by `@skr-connect/web`'s
+ * port shape directly; protocol correctness is covered by `@solana-mobile/seeker-connect-web`'s
  * fake-wallet harness, not here.
  */
 import type {
@@ -11,8 +11,8 @@ import type {
 	SeekerTransactOptions,
 	SeekerWallet,
 	SeekerWalletCapabilities,
-} from '@skr-connect/core';
-import { SeekerConnectError, SeekerConnectErrorCode } from '@skr-connect/core';
+} from '@solana-mobile/seeker-connect-core';
+import { SeekerConnectError, SeekerConnectErrorCode } from '@solana-mobile/seeker-connect-core';
 
 export const FAKE_CAPABILITIES: SeekerWalletCapabilities = {
 	maxMessagesPerRequest: 10,

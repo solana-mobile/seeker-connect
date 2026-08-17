@@ -15,8 +15,8 @@ import type {
 	SeekerSignInPayload,
 	SeekerWallet,
 	StoredAuthorization,
-} from '@skr-connect/core';
-import { DEFAULT_SEEKER_CHAIN, SeekerConnectError, SeekerConnectErrorCode } from '@skr-connect/core';
+} from '@solana-mobile/seeker-connect-core';
+import { DEFAULT_SEEKER_CHAIN, SeekerConnectError, SeekerConnectErrorCode } from '@solana-mobile/seeker-connect-core';
 import {
 	SolanaSignAndSendTransaction,
 	type SolanaSignAndSendTransactionFeature,

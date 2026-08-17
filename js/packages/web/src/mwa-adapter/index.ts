@@ -12,8 +12,8 @@ import type {
 	SeekerLink,
 	SeekerTransactOptions,
 	SeekerWallet,
-} from '@skr-connect/core';
-import { DEFAULT_SEEKER_CHAIN, SeekerConnectError, SeekerConnectErrorCode } from '@skr-connect/core';
+} from '@solana-mobile/seeker-connect-core';
+import { DEFAULT_SEEKER_CHAIN, SeekerConnectError, SeekerConnectErrorCode } from '@solana-mobile/seeker-connect-core';
 import type { AuthorizationResult, MobileWallet } from '@solana-mobile/mobile-wallet-adapter-protocol';
 import {
 	SolanaMobileWalletAdapterError,

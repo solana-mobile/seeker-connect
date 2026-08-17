@@ -1,7 +1,7 @@
 /**
  * Fake wallet endpoint speaking MWA-over-Nostr through a real relay, for
  * the browser E2E harness. Session/crypto/RPC behavior is shared with the
- * unit-test harness via `@skr-connect/web`'s `fakeWalletCore`. Node-only
+ * unit-test harness via `@solana-mobile/seeker-connect-web`'s `fakeWalletCore`. Node-only
  * (uses node's global WebSocket).
  */
 import type { FakeWalletScript, JsonRpcRequest, NostrEvent } from '../../../packages/web/test/fakeWalletCore.ts';

@@ -5,7 +5,7 @@
  * The designs' "Try again" CTA ships as "Close" until retry semantics
  * exist (docs/open-questions.md #1).
  */
-import type { SeekerConnectErrorCode } from '@skr-connect/core';
+import type { SeekerConnectErrorCode } from '@solana-mobile/seeker-connect-core';
 import { html, svg } from 'lit';
 
 import { css } from 'lit';

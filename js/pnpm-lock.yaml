@@ -47,10 +47,10 @@ importers:
       '@fontsource-variable/google-sans-flex':
         specifier: ^5.3.1
         version: 5.3.1
-      '@skr-connect/ui':
+      '@solana-mobile/seeker-connect-ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@skr-connect/wallet-standard':
+      '@solana-mobile/seeker-connect-wallet-standard':
         specifier: workspace:*
         version: link:../../packages/wallet-standard
       '@wallet-standard/app':
@@ -96,7 +96,7 @@ importers:
 
   packages/ui:
     dependencies:
-      '@skr-connect/core':
+      '@solana-mobile/seeker-connect-core':
         specifier: workspace:*
         version: link:../core
       lit:
@@ -105,13 +105,13 @@ importers:
 
   packages/wallet-standard:
     dependencies:
-      '@skr-connect/core':
+      '@solana-mobile/seeker-connect-core':
         specifier: workspace:*
         version: link:../core
-      '@skr-connect/ui':
+      '@solana-mobile/seeker-connect-ui':
         specifier: workspace:*
         version: link:../ui
-      '@skr-connect/web':
+      '@solana-mobile/seeker-connect-web':
         specifier: workspace:*
         version: link:../web
       '@solana/wallet-standard-features':
@@ -129,12 +129,12 @@ importers:
 
   packages/web:
     dependencies:
-      '@skr-connect/core':
-        specifier: workspace:*
-        version: link:../core
       '@solana-mobile/mobile-wallet-adapter-protocol':
         specifier: ^2.3.0
         version: 2.3.0(react-native@0.86.2(@babel/core@7.29.7(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.8)(supports-color@8.1.1))(typescript@6.0.3)
+      '@solana-mobile/seeker-connect-core':
+        specifier: workspace:*
+        version: link:../core
     devDependencies:
       '@noble/curves':
         specifier: ^2.2.0

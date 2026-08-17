@@ -1,5 +1,5 @@
 /** Default `AuthorizationCache` backed by `window.localStorage`. */
-import type { AuthorizationCache, SeekerAccount, StoredAuthorization } from '@skr-connect/core';
+import type { AuthorizationCache, SeekerAccount, StoredAuthorization } from '@solana-mobile/seeker-connect-core';
 
 const STORAGE_KEY = 'SeekerConnectAuthorizationCache';
 const STORAGE_VERSION = 1;

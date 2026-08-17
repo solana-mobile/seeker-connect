@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { SeekerConnectConfig } from '@skr-connect/core';
-import { SeekerConnectError, SeekerConnectErrorCode } from '@skr-connect/core';
+import type { SeekerConnectConfig } from '@solana-mobile/seeker-connect-core';
+import { SeekerConnectError, SeekerConnectErrorCode } from '@solana-mobile/seeker-connect-core';
 
 // The protocol package is mocked; these tests cover only the adapter's own
 // mapping. integration.test.ts exercises the real protocol.
