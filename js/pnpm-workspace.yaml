@@ -1,8 +1,0 @@
-packages:
-    - 'packages/*'
-    - 'examples/*'
-
-allowBuilds:
-    ngrok: true
-    agent-browser: true
-    esbuild: true
