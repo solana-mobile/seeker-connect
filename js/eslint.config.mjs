@@ -11,7 +11,7 @@ export default tseslint.config({ ignores: ['**/dist/**'] }, js.configs.recommend
 			{
 				patterns: [
 					{
-						group: ['@solana-mobile/*'],
+						group: ['@solana-mobile/*', '!@solana-mobile/seeker-connect-*'],
 						message:
 							"MWA libraries may only be imported inside a package's src/mwa-adapter/ module, behind the SeekerLink port.",
 					},

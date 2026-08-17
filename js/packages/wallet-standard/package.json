@@ -2,7 +2,9 @@
 	"name": "@solana-mobile/seeker-connect-wallet-standard",
 	"version": "0.1.0",
 	"type": "module",
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"publishConfig": {
 		"access": "public"
 	},

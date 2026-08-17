@@ -1,5 +1,10 @@
 /** Seeker Connect's Wallet Standard integration. */
-import type { AuthorizationCache, SeekerConnectConfig, SeekerConnectPresenter, SeekerLink } from '@solana-mobile/seeker-connect-core';
+import type {
+	AuthorizationCache,
+	SeekerConnectConfig,
+	SeekerConnectPresenter,
+	SeekerLink,
+} from '@solana-mobile/seeker-connect-core';
 import { createSeekerConnectPresenter } from '@solana-mobile/seeker-connect-ui';
 import { createNostrSeekerLink } from '@solana-mobile/seeker-connect-web';
 import { registerWallet } from '@wallet-standard/wallet';

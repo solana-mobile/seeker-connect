@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { SeekerConnectConfig, SeekerConnectPresenter, StoredAuthorization } from '@solana-mobile/seeker-connect-core';
+import type {
+	SeekerConnectConfig,
+	SeekerConnectPresenter,
+	StoredAuthorization,
+} from '@solana-mobile/seeker-connect-core';
 import { SeekerConnectError, SeekerConnectErrorCode } from '@solana-mobile/seeker-connect-core';
 import {
 	SolanaSignAndSendTransaction,
