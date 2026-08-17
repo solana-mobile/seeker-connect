@@ -14,7 +14,7 @@
 	},
 	"dependencies": {
 		"@skr-connect/core": "workspace:*",
-		"@solana-mobile/mobile-wallet-adapter-protocol": "file:../../../../mobile-wallet-adapter/js/packages/mobile-wallet-adapter-protocol"
+		"@solana-mobile/mobile-wallet-adapter-protocol": "^2.3.0"
 	},
 	"devDependencies": {
 		"@noble/curves": "^2.2.0",

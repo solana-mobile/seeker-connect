@@ -6,3 +6,6 @@ allowBuilds:
     ngrok: true
     agent-browser: true
     esbuild: true
+
+minimumReleaseAgeExclude:
+    - '@solana-mobile/mobile-wallet-adapter-protocol@2.3.0'
