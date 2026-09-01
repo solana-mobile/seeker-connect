@@ -10,9 +10,6 @@ disambiguation in favor of Seeker-Connect-owned UI and copy, using the MWA spec'
 existing Endpoint-specific URI (Android App Link) mechanism. It is a UX/DX layer,
 not a protocol reimplementation.
 
-See [`docs/plan.md`](docs/plan.md) for full requirements and
-[`docs/progress-log.md`](docs/progress-log.md) for the running build log.
-
 ## Targets
 
 Three dapp-side targets, built in this order:
@@ -25,7 +22,6 @@ Three dapp-side targets, built in this order:
 
 ```
 skr-connect/
-├── docs/        Requirements, upstream-task tracking, decisions, and the build log
 ├── js/          JS/TS monorepo (web + React Native) — pnpm workspaces + Turborepo + vitest
 │   ├── packages/
 │   │   ├── core/             SeekerLink port, shared types, error taxonomy, contract-test suite
