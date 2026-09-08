@@ -37,9 +37,9 @@ import { registerSeekerConnect } from '@solana-mobile/seeker-connect-wallet-stan
 import { createSeekerConnectPresenter } from '@solana-mobile/seeker-connect-ui';
 
 registerSeekerConnect({
-  identity: { name: 'My Dapp', uri: window.location.origin },
-  relayDomain: '<relay-domain>',
-  presenter: createSeekerConnectPresenter({ theme: 'dark' }),
+	identity: { name: 'My Dapp', uri: window.location.origin },
+	relayDomain: '<relay-domain>',
+	presenter: createSeekerConnectPresenter({ theme: 'dark' }),
 });
 ```
 

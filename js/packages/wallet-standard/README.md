@@ -26,14 +26,14 @@ import { StandardConnect } from '@wallet-standard/features';
 
 // 1. Register once, early in your app.
 registerSeekerConnect({
-  identity: { name: 'My Dapp', uri: window.location.origin, icon: '/icon.png' },
-  relayDomain: '<relay-domain>',
+	identity: { name: 'My Dapp', uri: window.location.origin, icon: '/icon.png' },
+	relayDomain: '<relay-domain>',
 });
 
 // 2. Discover it like any other Wallet Standard wallet.
 const wallet = getWallets()
-  .get()
-  .find((w) => w.name === 'Seeker Connect');
+	.get()
+	.find((w) => w.name === 'Seeker Connect');
 
 // 3. Connect — launches the wallet for user consent on first connect.
 const { accounts } = await wallet.features[StandardConnect].connect();

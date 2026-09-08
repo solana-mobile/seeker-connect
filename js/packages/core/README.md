@@ -27,11 +27,11 @@ Handle failures by switching on the shared error code:
 import { SeekerConnectError, SeekerConnectErrorCode } from '@solana-mobile/seeker-connect-core';
 
 try {
-  await connect();
+	await connect();
 } catch (error) {
-  if (error instanceof SeekerConnectError && error.code === SeekerConnectErrorCode.cancelled) {
-    // user cancelled from the Seeker Connect UI — usually a no-op
-  }
+	if (error instanceof SeekerConnectError && error.code === SeekerConnectErrorCode.cancelled) {
+		// user cancelled from the Seeker Connect UI — usually a no-op
+	}
 }
 ```
 

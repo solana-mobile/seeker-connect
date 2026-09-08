@@ -31,12 +31,12 @@ import type { SeekerConnectConfig } from '@solana-mobile/seeker-connect-web';
 const link = createNostrSeekerLink();
 
 const config: SeekerConnectConfig = {
-  identity: { name: 'My Dapp', uri: window.location.origin, icon: '/icon.png' },
-  relayDomain: '<relay-domain>',
+	identity: { name: 'My Dapp', uri: window.location.origin, icon: '/icon.png' },
+	relayDomain: '<relay-domain>',
 };
 
 const authorization = await link.transact(config, async (wallet) => {
-  return wallet.authorize({ chain: 'solana:mainnet' });
+	return wallet.authorize({ chain: 'solana:mainnet' });
 });
 
 // Persist authorization.authToken and authorization.walletUriBase yourself;
