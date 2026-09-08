@@ -27,7 +27,7 @@ import { StandardConnect } from '@wallet-standard/features';
 // 1. Register once, early in your app.
 registerSeekerConnect({
   identity: { name: 'My Dapp', uri: window.location.origin, icon: '/icon.png' },
-  relayDomain: 'relay.solanamobile.com',
+  relayDomain: '<relay-domain>',
 });
 
 // 2. Discover it like any other Wallet Standard wallet.

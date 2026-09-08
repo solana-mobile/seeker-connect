@@ -32,7 +32,7 @@ const link = createNostrSeekerLink();
 
 const config: SeekerConnectConfig = {
   identity: { name: 'My Dapp', uri: window.location.origin, icon: '/icon.png' },
-  relayDomain: 'relay.solanamobile.com',
+  relayDomain: '<relay-domain>',
 };
 
 const authorization = await link.transact(config, async (wallet) => {
