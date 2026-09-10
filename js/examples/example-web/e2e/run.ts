@@ -21,7 +21,7 @@ const EXAMPLE_DIR = fileURLToPath(new URL('..', import.meta.url));
 const AGENT_BROWSER = fileURLToPath(new URL('../../../node_modules/.bin/agent-browser', import.meta.url));
 const VITE = fileURLToPath(new URL('../node_modules/.bin/vite', import.meta.url));
 const APP_ORIGIN = 'http://localhost:3010';
-const RELAY_DOMAIN = process.env.SKR_E2E_RELAY ?? 'relay.solanamobile.com';
+const RELAY_DOMAIN = process.env.RELAY_DOMAIN ?? 'relay.example.com';
 
 const appUrl = (extra = '') => `${APP_ORIGIN}/?e2e&baseUri=off&relay=${RELAY_DOMAIN}${extra}`;
 

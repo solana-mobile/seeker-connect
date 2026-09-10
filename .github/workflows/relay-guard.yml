@@ -1,0 +1,31 @@
+name: Relay Host Guard
+
+# Blocks reintroduction of a hardcoded relay host into source. The real
+# relay host is injected at build time from the SM_NOSTR_RELAY_URL secret
+# and published only behind the gated docs page — it must never be
+# committed. Only placeholder hosts (*.example.com) and the <relay-domain>
+# token are allowed.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Block hardcoded relay hosts
+        run: |
+          matches=$(grep -rEIn "relay\.[a-z0-9-]+\.[a-z]{2,}" \
+            --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=dist \
+            --exclude=pnpm-lock.yaml --exclude=package-lock.json . \
+            | grep -viE "relay\.example\.com" || true)
+          if [ -n "$matches" ]; then
+            echo "::error::Hardcoded relay host found. Use a placeholder and inject the real host from the SM_NOSTR_RELAY_URL secret."
+            echo "$matches"
+            exit 1
+          fi
+          echo "No hardcoded relay hosts found."
