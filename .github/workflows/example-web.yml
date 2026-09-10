@@ -43,8 +43,6 @@ jobs:
       - name: '[example-web] Build for GitHub Pages'
         working-directory: 'js/examples/example-web/'
         env:
-          # The relay host is not committed to source; inject it at build
-          # time so the published bundle can reach the real relay.
           VITE_RELAY_DOMAIN: ${{ secrets.SM_NOSTR_RELAY_URL }}
         run: pnpm exec vite build --base ./
 
