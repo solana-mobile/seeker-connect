@@ -42,6 +42,10 @@ jobs:
       # a gh-pages subdirectory (vite.config.ts sets no base for local dev).
       - name: '[example-web] Build for GitHub Pages'
         working-directory: 'js/examples/example-web/'
+        env:
+          # The relay host is not committed to source; inject it at build
+          # time so the published bundle can reach the real relay.
+          VITE_RELAY_DOMAIN: ${{ secrets.SM_NOSTR_RELAY_URL }}
         run: pnpm exec vite build --base ./
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
