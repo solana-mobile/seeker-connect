@@ -1,7 +1,22 @@
 {
 	"name": "@solana-mobile/seeker-connect-web",
 	"version": "0.0.0",
+	"description": "Imperative web SDK for Seeker Connect, for dapps that manage sessions, the authorization token, and UI themselves.",
+	"keywords": [
+		"solana",
+		"solana-mobile",
+		"seeker",
+		"seeker-connect",
+		"wallet",
+		"web3"
+	],
 	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/solana-mobile/seeker-connect.git",
+		"directory": "js/packages/web"
+	},
+	"homepage": "https://github.com/solana-mobile/seeker-connect/tree/main/js/packages/web#readme",
 	"type": "module",
 	"files": [
 		"dist"

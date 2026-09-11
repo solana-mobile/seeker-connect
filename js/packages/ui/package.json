@@ -1,7 +1,24 @@
 {
 	"name": "@solana-mobile/seeker-connect-ui",
 	"version": "0.0.0",
+	"description": "Seeker Connect UI: a connect button, progress overlay, and error dialog as Lit custom elements in Shadow DOM.",
+	"keywords": [
+		"solana",
+		"solana-mobile",
+		"seeker",
+		"seeker-connect",
+		"wallet",
+		"web3",
+		"lit",
+		"ui"
+	],
 	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/solana-mobile/seeker-connect.git",
+		"directory": "js/packages/ui"
+	},
+	"homepage": "https://github.com/solana-mobile/seeker-connect/tree/main/js/packages/ui#readme",
 	"type": "module",
 	"files": [
 		"dist"
