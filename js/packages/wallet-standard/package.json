@@ -1,7 +1,23 @@
 {
 	"name": "@solana-mobile/seeker-connect-wallet-standard",
 	"version": "0.0.0",
+	"description": "Wallet Standard implementation of Seeker Connect — the entry point most web dapps use.",
+	"keywords": [
+		"solana",
+		"solana-mobile",
+		"seeker",
+		"seeker-connect",
+		"wallet",
+		"web3",
+		"wallet-standard"
+	],
 	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/solana-mobile/seeker-connect.git",
+		"directory": "js/packages/wallet-standard"
+	},
+	"homepage": "https://github.com/solana-mobile/seeker-connect/tree/main/js/packages/wallet-standard#readme",
 	"type": "module",
 	"files": [
 		"dist"

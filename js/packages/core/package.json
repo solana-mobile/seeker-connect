@@ -1,7 +1,23 @@
 {
 	"name": "@solana-mobile/seeker-connect-core",
 	"version": "0.0.0",
+	"description": "Platform-agnostic core of Seeker Connect: shared types, config, the error taxonomy, and the SeekerLink port.",
+	"keywords": [
+		"solana",
+		"solana-mobile",
+		"seeker",
+		"seeker-connect",
+		"wallet",
+		"web3",
+		"mobile-wallet-adapter"
+	],
 	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/solana-mobile/seeker-connect.git",
+		"directory": "js/packages/core"
+	},
+	"homepage": "https://github.com/solana-mobile/seeker-connect/tree/main/js/packages/core#readme",
 	"type": "module",
 	"files": [
 		"dist"
