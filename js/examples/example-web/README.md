@@ -50,14 +50,14 @@ Every setting is overridable per URL so the same build serves manual testing on
 a device, desktop development, and the automated E2E harness. Defaults live in
 [`src/config.ts`](src/config.ts).
 
-| Param | Meaning | Default |
-| --- | --- | --- |
-| `?relay=<domain>` | Nostr relay domain | `VITE_RELAY_DOMAIN` env, else `relay.example.com` |
-| `?baseUri=<uri\|off>` | First-connect wallet base URI; `off` disables it | `https://connect.solanamobile.com` |
-| `?chain=<solana:...>` | Chain requested at authorization | `solana:devnet` |
-| `?timeout=<ms>` | Association timeout override | SDK default |
-| `?rpc=<url>` | Solana RPC endpoint | `https://api.devnet.solana.com` |
-| `?e2e` | Test mode (synthetic blur keeps the harness session alive) | off |
+| Param                 | Meaning                                                    | Default                                           |
+| --------------------- | ---------------------------------------------------------- | ------------------------------------------------- |
+| `?relay=<domain>`     | Nostr relay domain                                         | `VITE_RELAY_DOMAIN` env, else `relay.example.com` |
+| `?baseUri=<uri\|off>` | First-connect wallet base URI; `off` disables it           | `https://connect.solanamobile.com`                |
+| `?chain=<solana:...>` | Chain requested at authorization                           | `solana:devnet`                                   |
+| `?timeout=<ms>`       | Association timeout override                               | SDK default                                       |
+| `?rpc=<url>`          | Solana RPC endpoint                                        | `https://api.devnet.solana.com`                   |
+| `?e2e`                | Test mode (synthetic blur keeps the harness session alive) | off                                               |
 
 The relay domain can also be set at build time with the `VITE_RELAY_DOMAIN`
 environment variable.
