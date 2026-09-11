@@ -1,6 +1,6 @@
 {
 	"name": "@solana-mobile/seeker-connect-core",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "Platform-agnostic core of Seeker Connect: shared types, config, the error taxonomy, and the SeekerLink port.",
 	"keywords": [
 		"solana",

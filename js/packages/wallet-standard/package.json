@@ -1,6 +1,6 @@
 {
 	"name": "@solana-mobile/seeker-connect-wallet-standard",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "Wallet Standard implementation of Seeker Connect — the entry point most web dapps use.",
 	"keywords": [
 		"solana",

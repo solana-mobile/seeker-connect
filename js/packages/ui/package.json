@@ -1,6 +1,6 @@
 {
 	"name": "@solana-mobile/seeker-connect-ui",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "Seeker Connect UI: a connect button, progress overlay, and error dialog as Lit custom elements in Shadow DOM.",
 	"keywords": [
 		"solana",

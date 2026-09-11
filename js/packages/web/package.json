@@ -1,6 +1,6 @@
 {
 	"name": "@solana-mobile/seeker-connect-web",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "Imperative web SDK for Seeker Connect, for dapps that manage sessions, the authorization token, and UI themselves.",
 	"keywords": [
 		"solana",
