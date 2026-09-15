@@ -43,9 +43,10 @@ must pass. Import it only from test code (it depends on `vitest`).
 
 ## Docs
 
+- [API reference](https://solana-mobile.github.io/seeker-connect/api/modules/_solana-mobile_seeker-connect-core.html)
+- [Live example dapp](https://solana-mobile.github.io/seeker-connect/example-web/)
 - [Repository](https://github.com/solana-mobile/seeker-connect)
 - [Web integration guide](https://github.com/solana-mobile/seeker-connect/blob/main/docs/integration-web.md)
   — including the full error taxonomy and recommended handling
-- [Live example dapp](https://solana-mobile.github.io/seeker-connect/example-web/)
 
 Licensed under Apache-2.0.

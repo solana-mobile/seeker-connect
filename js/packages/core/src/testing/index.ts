@@ -12,10 +12,13 @@ import { SeekerConnectError, SeekerConnectErrorCode } from '../index.js';
 
 /** What the driver's wallet double is scripted to respond with. */
 export interface SeekerLinkContractExpectations {
+	/** Accounts the wallet double authorizes. */
 	accounts: readonly SeekerAccount[];
+	/** Auth token the wallet double issues on authorize. */
 	authToken: string;
 	/** The endpoint-specific URI the wallet double hands out. */
 	walletUriBase: string;
+	/** The `get_capabilities` response the wallet double reports. */
 	capabilities: SeekerWalletCapabilities;
 	/** The deterministic transform the wallet double applies when signing a payload. */
 	signedPayload(payload: Uint8Array): Uint8Array;
@@ -36,20 +39,26 @@ export interface SeekerLinkContractObservations {
 	targetedBaseUris(): readonly (string | undefined)[];
 	/** The authorize requests the wallet double received, in order. */
 	authorizeRequests(): readonly {
+		/** The `auth_token` the request carried, if any. */
 		authToken?: string;
+		/** The chain the request asked for, if any. */
 		chain?: string;
+		/** Whether the request carried a sign-in payload. */
 		hasSignInPayload: boolean;
 	}[];
 	/** Auth tokens the wallet double has seen deauthorized, in order. */
 	deauthorizedTokens(): readonly string[];
 }
 
+/** Everything one test needs, produced fresh by {@link SeekerLinkContractDriver.setup} before each test. */
 export interface SeekerLinkContractContext {
 	/** The link under test, wired to the driver's wallet double. */
 	link: SeekerLink;
 	/** A config that connects successfully against the wallet double. */
 	config: SeekerConnectConfig;
+	/** What the wallet double is scripted to respond with. */
 	expected: SeekerLinkContractExpectations;
+	/** What the wallet double has recorded so far. */
 	observed: SeekerLinkContractObservations;
 	/** Scripts the wallet double to decline the next authorize. */
 	scriptAuthorizeDecline(): void;
@@ -57,14 +66,24 @@ export interface SeekerLinkContractContext {
 	scriptUnresponsiveWallet(): void;
 }
 
+/** Wires the `SeekerLink` under test to a controllable wallet double. */
 export interface SeekerLinkContractDriver {
+	/** Creates a fresh link and wallet double; runs before every test. */
 	setup(): Promise<SeekerLinkContractContext> | SeekerLinkContractContext;
+	/** Releases whatever `setup` created; runs after every test. */
 	teardown?(): Promise<void> | void;
 }
 
 const MESSAGE = Uint8Array.of(10, 20, 30);
 const TRANSACTION = Uint8Array.of(40, 50, 60, 70);
 
+/**
+ * Registers the `SeekerLink` contract suite for one implementation under a
+ * vitest `describe` block.
+ *
+ * @param implementationName - Shown in the suite title.
+ * @param driver - Wires the implementation under test to its wallet double.
+ */
 export function testSeekerLinkContract(implementationName: string, driver: SeekerLinkContractDriver): void {
 	describe(`SeekerLink contract: ${implementationName}`, () => {
 		let context: SeekerLinkContractContext;

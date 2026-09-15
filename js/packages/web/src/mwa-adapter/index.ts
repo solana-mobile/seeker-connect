@@ -30,6 +30,10 @@ import {
 
 const DEFAULT_ASSOCIATION_TIMEOUT_MS = 30_000;
 
+/**
+ * Creates the web `SeekerLink`. Each `transact` opens one MWA session over
+ * the configured Nostr relay and closes it when the callback settles.
+ */
 export function createNostrSeekerLink(): SeekerLink {
 	return {
 		async transact<T>(

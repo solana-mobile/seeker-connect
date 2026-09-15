@@ -1,0 +1,38 @@
+{
+	"$schema": "https://typedoc.org/schema.json",
+	"customFooterHtml": "Generated from the <code>main</code> branch of <a href=\"https://github.com/solana-mobile/seeker-connect\">solana-mobile/seeker-connect</a>.",
+	"entryPoints": ["packages/*"],
+	"entryPointStrategy": "packages",
+	"hostedBaseUrl": "https://solana-mobile.github.io/seeker-connect/api/",
+	"includeVersion": true,
+	"name": "Seeker Connect",
+	"out": "dist/api",
+	"packageOptions": {
+		"basePath": "../../..",
+		"disableGit": true,
+		"displayBasePath": "../../..",
+		"entryPoints": ["src/index.ts"],
+		"excludeExternals": true,
+		"excludeInternal": true,
+		"excludePrivate": true,
+		"excludeProtected": true,
+		"gitRevision": "main",
+		"includeVersion": true,
+		"sourceLinkTemplate": "https://github.com/solana-mobile/seeker-connect/blob/{gitRevision}/{path}#L{line}"
+	},
+	"packagesRequiringDocumentation": [
+		"@solana-mobile/seeker-connect-core",
+		"@solana-mobile/seeker-connect-ui",
+		"@solana-mobile/seeker-connect-wallet-standard",
+		"@solana-mobile/seeker-connect-web"
+	],
+	"plugin": ["typedoc-plugin-mdn-links"],
+	"readme": "../README.md",
+	"treatWarningsAsErrors": true,
+	"validation": {
+		"invalidLink": true,
+		"notDocumented": true,
+		"notExported": true,
+		"rewrittenLink": true
+	}
+}
