@@ -49,8 +49,9 @@ paths (`S_MARK_PATH`, `S_MARK_ARC_PATH`, `FOOTER_WORDMARK_PATHS`).
 
 ## Docs
 
+- [API reference](https://solana-mobile.github.io/seeker-connect/api/modules/_solana-mobile_seeker-connect-ui.html)
+- [Live example dapp](https://solana-mobile.github.io/seeker-connect/example-web/)
 - [Repository](https://github.com/solana-mobile/seeker-connect)
 - [Web integration guide](https://github.com/solana-mobile/seeker-connect/blob/main/docs/integration-web.md)
-- [Live example dapp](https://solana-mobile.github.io/seeker-connect/example-web/)
 
 Licensed under Apache-2.0.

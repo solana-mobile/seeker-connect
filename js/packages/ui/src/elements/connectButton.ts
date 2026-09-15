@@ -14,6 +14,7 @@ import { css, html, LitElement, svg } from 'lit';
 
 import { S_GLYPH_MONO_PATHS } from './connectButtonVectors.js';
 
+/** Which label the button shows: `connect` or `sign-in`. */
 export type SeekerConnectButtonVariant = 'connect' | 'sign-in';
 
 const LABELS: Record<SeekerConnectButtonVariant, string> = {
@@ -21,13 +22,20 @@ const LABELS: Record<SeekerConnectButtonVariant, string> = {
 	'sign-in': 'Sign in with Seeker',
 };
 
+/**
+ * The `<seeker-connect-button>` element. Purely presentational: it fires
+ * ordinary click events and the consumer wires the action.
+ */
 export class SeekerConnectButton extends LitElement {
+	/** @internal */
 	static properties = {
 		variant: { type: String },
 		disabled: { type: Boolean, reflect: true },
 	};
 
+	/** Selects the label; defaults to `connect`. */
 	declare variant: SeekerConnectButtonVariant;
+	/** Disables the button and reflects the `disabled` attribute. */
 	declare disabled: boolean;
 
 	constructor() {
@@ -36,6 +44,7 @@ export class SeekerConnectButton extends LitElement {
 		this.disabled = false;
 	}
 
+	/** @internal */
 	static styles = css`
 		:host {
 			display: inline-block;
@@ -105,6 +114,7 @@ export class SeekerConnectButton extends LitElement {
 		}
 	`;
 
+	/** @internal */
 	render() {
 		const label = LABELS[this.variant] ?? LABELS.connect;
 		return html`

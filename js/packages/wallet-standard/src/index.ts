@@ -42,6 +42,7 @@ export {
 	SeekerConnectWallet,
 	SeekerConnectWalletName,
 	type SeekerConnectWalletFeatures,
+	type SeekerConnectWalletOptionalFeatures,
 	type SeekerConnectWalletOptions,
 } from './wallet.js';
 export type {

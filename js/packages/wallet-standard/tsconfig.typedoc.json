@@ -1,0 +1,15 @@
+{
+	// TypeDoc-only: resolve workspace siblings to their sources so cross-package
+	// references link to a single documented declaration instead of duplicating
+	// the built `.d.ts`.
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"noEmit": true,
+		"rootDir": "..",
+		"paths": {
+			"@solana-mobile/seeker-connect-core": ["../core/src/index.ts"],
+			"@solana-mobile/seeker-connect-ui": ["../ui/src/index.ts"],
+			"@solana-mobile/seeker-connect-web": ["../web/src/index.ts"]
+		}
+	}
+}

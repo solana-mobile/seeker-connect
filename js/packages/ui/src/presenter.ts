@@ -23,6 +23,7 @@ export function defineSeekerConnectElements(): void {
 	}
 }
 
+/** Options for {@link createSeekerConnectPresenter}. */
 export interface SeekerConnectPresenterOptions {
 	/** Forces a theme; defaults to following `prefers-color-scheme`. */
 	theme?: 'light' | 'dark';
