@@ -29,6 +29,7 @@ import {
 } from '@solana-mobile/mobile-wallet-adapter-protocol/encoding';
 
 const DEFAULT_ASSOCIATION_TIMEOUT_MS = 30_000;
+const DEFAULT_REQUEST_TIMEOUT_MS = 120_000;
 
 export function createNostrSeekerLink(): SeekerLink {
 	return {
@@ -74,7 +75,7 @@ export function createNostrSeekerLink(): SeekerLink {
 	};
 }
 
-/** Bounds association only; the interaction itself is never timed out. */
+/** Bounds association only; individual wallet requests are bounded by `withRequestTimeout`. */
 async function associate(walletPromise: Promise<MobileWallet>, timeoutMs: number): Promise<MobileWallet> {
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	try {
@@ -140,17 +141,46 @@ function mapWalletError(e: unknown): unknown {
 	return e;
 }
 
+/**
+ * Bounds one wallet request. The protocol's Nostr transport can drop a
+ * session without rejecting in-flight requests, which would otherwise
+ * leave the caller waiting forever.
+ */
+async function withRequestTimeout<T>(request: Promise<T>, method: string, timeoutMs: number): Promise<T> {
+	let timer: ReturnType<typeof setTimeout> | undefined;
+	try {
+		return await Promise.race([
+			request,
+			new Promise<never>((_, reject) => {
+				timer = setTimeout(
+					() =>
+						reject(
+							new SeekerConnectError(
+								SeekerConnectErrorCode.sessionClosed,
+								`The wallet did not respond to ${method} within ${timeoutMs}ms`,
+							),
+						),
+					timeoutMs,
+				);
+			}),
+		]);
+	} finally {
+		clearTimeout(timer);
+	}
+}
+
 function createSessionWallet(wallet: MobileWallet, config: SeekerConnectConfig): SeekerWallet {
-	const guard = async <T>(fn: () => Promise<T>): Promise<T> => {
+	const timeoutMs = config.requestTimeoutMs ?? DEFAULT_REQUEST_TIMEOUT_MS;
+	const guard = async <T>(method: string, fn: () => Promise<T>): Promise<T> => {
 		try {
-			return await fn();
+			return await withRequestTimeout(fn(), method, timeoutMs);
 		} catch (e) {
 			throw mapWalletError(e);
 		}
 	};
 	return {
 		authorize: (request) =>
-			guard(async () => {
+			guard('authorize', async () => {
 				const result = await wallet.authorize({
 					identity: config.identity,
 					chain: request?.chain ?? config.chain ?? DEFAULT_SEEKER_CHAIN,
@@ -160,11 +190,11 @@ function createSessionWallet(wallet: MobileWallet, config: SeekerConnectConfig):
 				return mapAuthorization(result);
 			}),
 		deauthorize: ({ authToken }) =>
-			guard(async () => {
+			guard('deauthorize', async () => {
 				await wallet.deauthorize({ auth_token: authToken });
 			}),
 		getCapabilities: () =>
-			guard(async () => {
+			guard('getCapabilities', async () => {
 				const capabilities = await wallet.getCapabilities();
 				return {
 					maxMessagesPerRequest: capabilities.max_messages_per_request,
@@ -175,7 +205,7 @@ function createSessionWallet(wallet: MobileWallet, config: SeekerConnectConfig):
 				};
 			}),
 		signMessages: ({ addresses, payloads }) =>
-			guard(async () => {
+			guard('signMessages', async () => {
 				const result = await wallet.signMessages({
 					addresses: addresses.map((address) => base64FromUint8Array(base58ToUint8Array(address))),
 					payloads: payloads.map((payload) => base64FromUint8Array(payload)),
@@ -183,14 +213,14 @@ function createSessionWallet(wallet: MobileWallet, config: SeekerConnectConfig):
 				return result.signed_payloads.map(base64ToUint8Array);
 			}),
 		signTransactions: ({ payloads }) =>
-			guard(async () => {
+			guard('signTransactions', async () => {
 				const result = await wallet.signTransactions({
 					payloads: payloads.map((payload) => base64FromUint8Array(payload)),
 				});
 				return result.signed_payloads.map(base64ToUint8Array);
 			}),
 		signAndSendTransactions: ({ payloads, options }) =>
-			guard(async () => {
+			guard('signAndSendTransactions', async () => {
 				const result = await wallet.signAndSendTransactions({
 					payloads: payloads.map((payload) => base64FromUint8Array(payload)),
 					...(options

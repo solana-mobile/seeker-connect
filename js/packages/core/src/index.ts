@@ -53,6 +53,13 @@ export interface SeekerConnectConfig {
 	 * interaction itself.
 	 */
 	associationTimeoutMs?: number;
+	/**
+	 * How long a single wallet request (authorize, sign, send, …) may wait
+	 * for the wallet's response before it rejects with `session-closed`.
+	 * Defaults to 2 minutes. Guards against sessions that drop without
+	 * rejecting in-flight requests.
+	 */
+	requestTimeoutMs?: number;
 }
 
 /** An account the wallet authorized for this dapp. */

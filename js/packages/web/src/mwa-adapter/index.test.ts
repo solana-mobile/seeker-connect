@@ -425,6 +425,23 @@ describe('error mapping', () => {
 		expect((error as SeekerConnectError).code).toBe(SeekerConnectErrorCode.sessionClosed);
 	});
 
+	it('rejects with session-closed when the wallet never responds to a request', async () => {
+		const { scenario } = mockScenario({
+			signAndSendTransactions: vi.fn().mockReturnValue(new Promise(() => {})),
+		});
+
+		const error = await rejectionOf(
+			createNostrSeekerLink().transact({ ...CONFIG, requestTimeoutMs: 10 }, (session) =>
+				session.signAndSendTransactions({ payloads: [Uint8Array.of(1)] }),
+			),
+		);
+
+		expect(error).toBeInstanceOf(SeekerConnectError);
+		expect((error as SeekerConnectError).code).toBe(SeekerConnectErrorCode.sessionClosed);
+		expect((error as SeekerConnectError).message).toContain('signAndSendTransactions');
+		expect(scenario.close).toHaveBeenCalledOnce();
+	});
+
 	it('maps other wallet failures to wallet-error', async () => {
 		mockScenario({
 			authorize: vi.fn().mockRejectedValue(new SolanaMobileWalletAdapterProtocolError(0, -32601, 'no method')),
