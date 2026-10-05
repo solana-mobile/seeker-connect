@@ -4,9 +4,8 @@
  * Topology: the real example app runs in a real Chromium (driven through
  * the agent-browser CLI); the fake wallet runs in this process and talks
  * to the app over a real Nostr relay. The only test-only seam is the
- * association-URL capture (see vite.config.ts) plus the synthetic blur in
- * the app's `?e2e` mode — a desktop browser has no wallet app to receive
- * the launch intent.
+ * association-URL capture (see vite.config.ts) — a desktop browser has no
+ * wallet app to receive the launch intent.
  *
  * Run from `examples/example-web`: `pnpm e2e`. Requires network access to
  * the relay (SKR_E2E_RELAY overrides the default).
@@ -23,7 +22,7 @@ const VITE = fileURLToPath(new URL('../node_modules/.bin/vite', import.meta.url)
 const APP_ORIGIN = 'http://localhost:3010';
 const RELAY_DOMAIN = process.env.RELAY_DOMAIN ?? 'relay.example.com';
 
-const appUrl = (extra = '') => `${APP_ORIGIN}/?e2e&baseUri=off&relay=${RELAY_DOMAIN}${extra}`;
+const appUrl = (extra = '') => `${APP_ORIGIN}/?relay=${RELAY_DOMAIN}${extra}`;
 
 function ab(...args: string[]): string {
 	return execFileSync(AGENT_BROWSER, args, {
@@ -67,9 +66,8 @@ function logText(): string {
 }
 
 /**
- * In-page click. agent-browser's coordinate-based click stops delivering
- * after the first interaction here (likely confused by the `?e2e` mode's
- * synthetic blur events); an in-page click exercises the same app code.
+ * In-page click. agent-browser's coordinate-based click proved unreliable
+ * here; an in-page click exercises the same app code.
  */
 function click(testId: string): void {
 	evalInPage<boolean>(`(document.querySelector('[data-testid=${testId}]').click(), true)`);
@@ -112,8 +110,8 @@ async function main(): Promise<void> {
 			process.exit(1);
 		}
 	});
-	// No endpoint-specific URI: an https wallet URI would make the next
-	// interaction's launch a real navigation away from the app under test.
+	// No endpoint-specific URI: every launch targets the first-connect
+	// shared domain.
 	const wallet = new RelayFakeWallet({ walletUriBase: null });
 	const served = new Set<string>();
 	let pumpStopped = false;

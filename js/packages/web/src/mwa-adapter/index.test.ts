@@ -96,8 +96,18 @@ describe('transact scenario management', () => {
 		expect(mockStartNostrScenario).toHaveBeenCalledWith({
 			connectionType: 'local',
 			relayDomain: 'relay.example.com',
-			baseUri: undefined,
+			baseUri: 'https://connect.solanamobile.com',
 		});
+	});
+
+	it('targets the shared App Link domain when the first-connect URI is empty', async () => {
+		mockScenario();
+
+		await createNostrSeekerLink().transact({ ...CONFIG, firstConnectWalletBaseUri: '' }, () => Promise.resolve());
+
+		expect(mockStartNostrScenario).toHaveBeenCalledWith(
+			expect.objectContaining({ baseUri: 'https://connect.solanamobile.com' }),
+		);
 	});
 
 	it('pre-seeds the configured first-connect wallet base URI', async () => {

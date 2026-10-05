@@ -4,11 +4,11 @@ import { defineConfig } from 'vite';
 
 /**
  * E2E-only (SKR_E2E=1): records every association URL on
- * `window.__skrE2eAssociationUrls` before the real launch. A desktop test
+ * `window.__skrE2eAssociationUrls` instead of launching it. A desktop test
  * browser has no wallet app to receive the launch intent, so this is the
  * only way the harness's fake wallet can learn the session parameters the
- * wallet app would normally get. The launch itself still runs (it is a
- * silent no-op for an unhandled custom scheme).
+ * wallet app would normally get. The launch is suppressed because nothing
+ * claims the https App Link on desktop: it would navigate away from the app.
  */
 function e2eAssociationCapture(): Plugin {
 	return {
@@ -20,7 +20,7 @@ function e2eAssociationCapture(): Plugin {
 			if (!code.includes('window.location.assign(associationUrl)')) return;
 			return code.replaceAll(
 				'window.location.assign(associationUrl)',
-				'((window.__skrE2eAssociationUrls ??= []).push(associationUrl.toString()), window.location.assign(associationUrl))',
+				'(window.__skrE2eAssociationUrls ??= []).push(associationUrl.toString())',
 			);
 		},
 	};
