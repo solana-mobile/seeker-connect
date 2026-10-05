@@ -69,7 +69,7 @@ describe('createNostrSeekerLink over the real protocol', () => {
 		const authorization = await createNostrSeekerLink().transact(CONFIG, (session) => session.authorize());
 
 		const [launched] = wallet.launchedUrls;
-		expect(launched!.protocol).toBe('solana-wallet:');
+		expect(launched!.origin).toBe('https://connect.solanamobile.com');
 		expect(launched!.pathname).toContain('v1/associate/local/nostr');
 		expect(launched!.searchParams.get('relay')).toBe('fakerelay.example.com');
 

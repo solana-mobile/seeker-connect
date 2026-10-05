@@ -13,7 +13,12 @@ import type {
 	SeekerTransactOptions,
 	SeekerWallet,
 } from '@solana-mobile/seeker-connect-core';
-import { DEFAULT_SEEKER_CHAIN, SeekerConnectError, SeekerConnectErrorCode } from '@solana-mobile/seeker-connect-core';
+import {
+	DEFAULT_FIRST_CONNECT_WALLET_BASE_URI,
+	DEFAULT_SEEKER_CHAIN,
+	SeekerConnectError,
+	SeekerConnectErrorCode,
+} from '@solana-mobile/seeker-connect-core';
 import type { AuthorizationResult, MobileWallet } from '@solana-mobile/mobile-wallet-adapter-protocol';
 import {
 	SolanaMobileWalletAdapterError,
@@ -49,7 +54,10 @@ export function createNostrSeekerLink(): SeekerLink {
 				scenario = await startNostrScenario({
 					connectionType: 'local',
 					relayDomain: config.relayDomain,
-					baseUri: options?.walletUriBase ?? config.firstConnectWalletBaseUri,
+					baseUri:
+						options?.walletUriBase ||
+						config.firstConnectWalletBaseUri ||
+						DEFAULT_FIRST_CONNECT_WALLET_BASE_URI,
 				});
 			} catch (e) {
 				throw associationFailure(e);

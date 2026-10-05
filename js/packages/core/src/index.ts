@@ -21,6 +21,13 @@ export type SeekerChain = `solana:${string}`;
 export const DEFAULT_SEEKER_CHAIN: SeekerChain = 'solana:mainnet';
 
 /**
+ * Shared App Link domain authorized for every certified wallet; first
+ * connections target it so Android opens the installed certified wallet
+ * directly, with no disambiguation dialog.
+ */
+export const DEFAULT_FIRST_CONNECT_WALLET_BASE_URI = 'https://connect.solanamobile.com';
+
+/**
  * How the dapp identifies itself to the wallet during authorization
  * (the MWA `authorize` request's identity, shown in the wallet's consent UI).
  */
@@ -42,8 +49,9 @@ export interface SeekerConnectConfig {
 	chain?: SeekerChain;
 	/**
 	 * Wallet base URI to target on the first connection, before any wallet
-	 * has been learned from an `authorize` response. When unset, first
-	 * connections use the generic `solana-wallet:` scheme.
+	 * has been learned from an `authorize` response. Defaults to
+	 * {@link DEFAULT_FIRST_CONNECT_WALLET_BASE_URI} when unset or empty;
+	 * first connections never use the generic `solana-wallet:` scheme.
 	 */
 	firstConnectWalletBaseUri?: string;
 	/**
