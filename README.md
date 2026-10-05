@@ -22,13 +22,16 @@ The web SDK ships as four npm packages under `@solana-mobile/seeker-connect-*`:
 
 | Package | Purpose |
 | --- | --- |
-| [`@solana-mobile/seeker-connect-wallet-standard`](js/packages/wallet-standard) | Wallet Standard implementation — the entry point most dapps use. |
-| [`@solana-mobile/seeker-connect-web`](js/packages/web) | Imperative web SDK for dapps not using Wallet Standard. |
-| [`@solana-mobile/seeker-connect-ui`](js/packages/ui) | Seeker-Connect-owned UI (Lit): connect button, progress overlay, error dialogs. |
-| [`@solana-mobile/seeker-connect-core`](js/packages/core) | Platform-agnostic contracts, shared types, and error taxonomy. |
+| [`@solana-mobile/seeker-connect-wallet-standard`](https://github.com/solana-mobile/seeker-connect/tree/main/js/packages/wallet-standard) | Wallet Standard implementation — the entry point most dapps use. |
+| [`@solana-mobile/seeker-connect-web`](https://github.com/solana-mobile/seeker-connect/tree/main/js/packages/web) | Imperative web SDK for dapps not using Wallet Standard. |
+| [`@solana-mobile/seeker-connect-ui`](https://github.com/solana-mobile/seeker-connect/tree/main/js/packages/ui) | Seeker-Connect-owned UI (Lit): connect button, progress overlay, error dialogs. |
+| [`@solana-mobile/seeker-connect-core`](https://github.com/solana-mobile/seeker-connect/tree/main/js/packages/core) | Platform-agnostic contracts, shared types, and error taxonomy. |
 
 Most dapps depend only on `@solana-mobile/seeker-connect-wallet-standard`, which
 pulls in `-web`, `-ui`, and `-core` transitively.
+
+The generated [API reference](https://solana-mobile.github.io/seeker-connect/api/)
+covers all four packages and is rebuilt from `main` on every push.
 
 ## Install
 
@@ -73,7 +76,7 @@ user is not re-prompted for consent.
 
 For the full end-to-end walkthrough — auto-discovery, connect/sign flows, the
 imperative `-web` path, configuration, and the error taxonomy — see the
-[web integration guide](docs/integration-web.md).
+[web integration guide](https://github.com/solana-mobile/seeker-connect/blob/main/docs/integration-web.md).
 
 ## Targets
 
@@ -122,6 +125,7 @@ corepack pnpm build
 corepack pnpm test          # protocol-level + unit suites (no browser, no Android)
 corepack pnpm lint
 corepack pnpm format:check
+corepack pnpm docs:build    # API reference → js/dist/api
 ```
 
 Browser E2E (real Chromium via agent-browser; fake wallet over a real Nostr

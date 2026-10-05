@@ -49,13 +49,23 @@ const ERROR_COPY: Partial<Record<SeekerConnectErrorCode, ErrorCopy>> = {
 
 const FALLBACK_COPY = ERROR_COPY['wallet-error']!;
 
+/**
+ * The `<seeker-connect-error-dialog>` element: explains a failed wallet
+ * interaction in Seeker Connect copy selected by {@link SeekerConnectErrorDialog.code}.
+ */
 export class SeekerConnectErrorDialog extends SeekerConnectCard {
+	/** @internal */
 	static properties = {
 		code: { type: String },
 	};
 
+	/**
+	 * Selects the dialog's title, body, and icon. Unknown or unset codes show
+	 * the generic wallet-error copy.
+	 */
 	declare code: SeekerConnectErrorCode | undefined;
 
+	/** @internal */
 	static styles = [
 		cardStyles,
 		css`
@@ -66,6 +76,7 @@ export class SeekerConnectErrorDialog extends SeekerConnectCard {
 		`,
 	];
 
+	/** @internal */
 	render() {
 		const copy = (this.code && ERROR_COPY[this.code]) || FALLBACK_COPY;
 		const iconPaths = copy.icon === 'declined' ? DECLINED_ICON_PATHS : GLOBE_ICON_PATHS;

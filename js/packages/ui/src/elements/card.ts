@@ -5,21 +5,25 @@
  */
 import { LitElement } from 'lit';
 
+/** Base class of the modal cards; not registered as an element itself. */
 export class SeekerConnectCard extends LitElement {
 	#onKeyDown = (event: KeyboardEvent) => {
 		if (event.key === 'Escape') this.dismiss();
 	};
 
+	/** @internal */
 	connectedCallback(): void {
 		super.connectedCallback();
 		window.addEventListener('keydown', this.#onKeyDown);
 	}
 
+	/** @internal */
 	disconnectedCallback(): void {
 		window.removeEventListener('keydown', this.#onKeyDown);
 		super.disconnectedCallback();
 	}
 
+	/** @internal */
 	firstUpdated(): void {
 		// Move focus into the dialog without painting the focus ring;
 		// keyboard navigation still shows it via :focus-visible.
@@ -28,6 +32,7 @@ export class SeekerConnectCard extends LitElement {
 		} as FocusOptions);
 	}
 
+	/** Closes the card: dispatches `seeker-connect-dismiss`, then removes the element from the DOM. */
 	dismiss(): void {
 		this.dispatchEvent(
 			new Event('seeker-connect-dismiss', {

@@ -5,6 +5,7 @@
 	"scripts": {
 		"build": "turbo run build",
 		"changeset:check": "node ./scripts/check-changesets.mjs",
+		"docs:build": "typedoc",
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"lint": "eslint .",
@@ -20,6 +21,8 @@
 		"happy-dom": "^20.0.11",
 		"prettier": "^3.9.6",
 		"turbo": "^2.10.8",
+		"typedoc": "0.28.20",
+		"typedoc-plugin-mdn-links": "5.1.1",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.66.0",
 		"vitest": "^4.1.10"

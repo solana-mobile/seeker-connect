@@ -53,6 +53,7 @@ import { ReadonlyWalletAccount } from '@wallet-standard/wallet';
 
 import { icon } from './icon.js';
 
+/** The `name` this wallet registers under in the Wallet Standard registry. */
 export const SeekerConnectWalletName = 'Seeker Connect';
 
 // Ed25519 signatures; the signed payload carries the signature in its
@@ -66,22 +67,38 @@ const ACCOUNT_FEATURES = [
 	SolanaSignIn,
 ] as const;
 
-type OptionalFeatures = Partial<SolanaSignAndSendTransactionFeature & SolanaSignTransactionFeature>;
+/** Signing features present only when the wallet's reported capabilities include them. */
+export type SeekerConnectWalletOptionalFeatures = Partial<
+	SolanaSignAndSendTransactionFeature & SolanaSignTransactionFeature
+>;
 
+/**
+ * The Wallet Standard features {@link SeekerConnectWallet.features} exposes.
+ * The transaction-signing features come and go with the wallet's capabilities.
+ */
 export type SeekerConnectWalletFeatures = StandardConnectFeature &
 	StandardDisconnectFeature &
 	StandardEventsFeature &
 	SolanaSignMessageFeature &
 	SolanaSignInFeature &
-	OptionalFeatures;
+	SeekerConnectWalletOptionalFeatures;
 
+/** Dependencies of a {@link SeekerConnectWallet}; the `registerSeekerConnect` entry point fills in defaults. */
 export interface SeekerConnectWalletOptions {
+	/** Dapp identity, relay, and chain. */
 	config: SeekerConnectConfig;
+	/** Transport that opens wallet sessions. */
 	link: SeekerLink;
+	/** Where the wallet-issued authorization persists between page loads. */
 	authorizationCache: AuthorizationCache;
+	/** UI shown around each wallet interaction. */
 	presenter: SeekerConnectPresenter;
 }
 
+/**
+ * The Wallet Standard `Wallet` for Seeker Connect. Register it with
+ * `registerSeekerConnect`, or construct it directly to supply every dependency.
+ */
 export class SeekerConnectWallet implements Wallet {
 	readonly #config: SeekerConnectConfig;
 	readonly #link: SeekerLink;
@@ -94,7 +111,7 @@ export class SeekerConnectWallet implements Wallet {
 
 	#authorization: StoredAuthorization | undefined;
 	#accounts: readonly WalletAccount[] = [];
-	#optionalFeatures: OptionalFeatures;
+	#optionalFeatures: SeekerConnectWalletOptionalFeatures;
 	#pendingAuthorization: Promise<StoredAuthorization> | undefined;
 	/**
 	 * Bumped on disconnect; interactions started before the bump must not
@@ -124,30 +141,37 @@ export class SeekerConnectWallet implements Wallet {
 		};
 	}
 
+	/** The Wallet Standard version implemented. */
 	get version() {
 		return '1.0.0' as const;
 	}
 
+	/** Always {@link SeekerConnectWalletName}. */
 	get name() {
 		return SeekerConnectWalletName;
 	}
 
+	/** The Seeker Connect icon, as a data URI. */
 	get icon() {
 		return icon;
 	}
 
+	/** The single chain from the config. */
 	get chains() {
 		return [this.#chain];
 	}
 
+	/** Accounts of the current authorization; empty while disconnected. */
 	get accounts() {
 		return this.#accounts.slice();
 	}
 
+	/** Whether an authorization is currently held. */
 	get connected(): boolean {
 		return !!this.#authorization;
 	}
 
+	/** See {@link SeekerConnectWalletFeatures}. */
 	get features(): SeekerConnectWalletFeatures {
 		return {
 			[StandardConnect]: {
@@ -473,7 +497,7 @@ function deriveOptionalFeatures(
 		signAndSendTransaction: SolanaSignAndSendTransactionMethod;
 		signTransaction: SolanaSignTransactionMethod;
 	},
-): OptionalFeatures {
+): SeekerConnectWalletOptionalFeatures {
 	const supportsSignTransactions = capabilities.features.includes('solana:signTransactions');
 	const supportsSignAndSend = capabilities.supportsSignAndSendTransactions;
 	return {

@@ -10,7 +10,12 @@ import { css, html } from 'lit';
 import { cardStyles, CLOSE_X_PATH, footerWordmark, S_MARK_ARC_PATH, S_MARK_PATH } from '../brand.js';
 import { SeekerConnectCard } from './card.js';
 
+/**
+ * The `<seeker-connect-progress>` element: the overlay shown while a wallet
+ * interaction is in flight. Dismissing it cancels the interaction.
+ */
 export class SeekerConnectProgress extends SeekerConnectCard {
+	/** @internal */
 	static styles = [
 		cardStyles,
 		css`
@@ -35,6 +40,7 @@ export class SeekerConnectProgress extends SeekerConnectCard {
 		`,
 	];
 
+	/** @internal */
 	render() {
 		return html`
 			<div class="backdrop" @click=${this.onBackdropClick}>
