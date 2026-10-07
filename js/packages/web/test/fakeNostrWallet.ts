@@ -175,8 +175,10 @@ export class FakeNostrWallet {
 		const windowListeners = new Map<string, Set<Listener>>();
 		define('window', {
 			isSecureContext: true,
-			setTimeout: setTimeout.bind(globalThis),
+			clearInterval: clearInterval.bind(globalThis),
 			clearTimeout: clearTimeout.bind(globalThis),
+			setInterval: setInterval.bind(globalThis),
+			setTimeout: setTimeout.bind(globalThis),
 			addEventListener(type: string, listener: Listener) {
 				let set = windowListeners.get(type);
 				if (!set) windowListeners.set(type, (set = new Set()));
