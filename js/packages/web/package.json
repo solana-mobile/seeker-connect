@@ -35,7 +35,7 @@
 	},
 	"dependencies": {
 		"@solana-mobile/seeker-connect-core": "workspace:*",
-		"@solana-mobile/mobile-wallet-adapter-protocol": "^2.3.0"
+		"@solana-mobile/mobile-wallet-adapter-protocol": "^3.0.0"
 	},
 	"devDependencies": {
 		"@noble/curves": "^2.2.0",
