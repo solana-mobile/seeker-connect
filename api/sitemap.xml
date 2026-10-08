@@ -2,342 +2,342 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/index.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/modules.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/hierarchy.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/modules/_solana-mobile_seeker-connect-core.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/modules/_solana-mobile_seeker-connect-core.js_packages_core_src.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/classes/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerConnectError.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.AuthorizationCache.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.DappIdentity.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerAccount.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerAuthorization.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerAuthorizeRequest.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerConnectConfig.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerConnectPresenter.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerLink.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerSignAndSendOptions.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerSignInPayload.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerSignInResult.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerTransactOptions.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerWallet.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerWalletCapabilities.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src.StoredAuthorization.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/types/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerChain.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/types/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerConnectErrorCode.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/variables/_solana-mobile_seeker-connect-core.js_packages_core_src.DEFAULT_FIRST_CONNECT_WALLET_BASE_URI.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/variables/_solana-mobile_seeker-connect-core.js_packages_core_src.DEFAULT_SEEKER_CHAIN.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/variables/_solana-mobile_seeker-connect-core.js_packages_core_src.SeekerConnectErrorCode.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/modules/_solana-mobile_seeker-connect-core.js_packages_core_src_testing.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src_testing.SeekerLinkContractContext.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src_testing.SeekerLinkContractDriver.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src_testing.SeekerLinkContractExpectations.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-core.js_packages_core_src_testing.SeekerLinkContractObservations.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/functions/_solana-mobile_seeker-connect-core.js_packages_core_src_testing.testSeekerLinkContract.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/modules/_solana-mobile_seeker-connect-ui.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/classes/_solana-mobile_seeker-connect-ui.SeekerConnectButton.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/classes/_solana-mobile_seeker-connect-ui.SeekerConnectErrorDialog.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/classes/_solana-mobile_seeker-connect-ui.SeekerConnectProgress.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-ui.SeekerConnectPresenterOptions.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/types/_solana-mobile_seeker-connect-ui.SeekerConnectButtonVariant.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/variables/_solana-mobile_seeker-connect-ui.FOOTER_WORDMARK_PATHS.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/variables/_solana-mobile_seeker-connect-ui.S_MARK_ARC_PATH.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/variables/_solana-mobile_seeker-connect-ui.S_MARK_PATH.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/functions/_solana-mobile_seeker-connect-ui.createSeekerConnectPresenter.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/functions/_solana-mobile_seeker-connect-ui.defineSeekerConnectElements.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/modules/_solana-mobile_seeker-connect-wallet-standard.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/classes/_solana-mobile_seeker-connect-wallet-standard.SeekerConnectError.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/classes/_solana-mobile_seeker-connect-wallet-standard.SeekerConnectWallet.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-wallet-standard.AuthorizationCache.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-wallet-standard.DappIdentity.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-wallet-standard.RegisterSeekerConnectOptions.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-wallet-standard.SeekerAccount.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-wallet-standard.SeekerConnectConfig.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-wallet-standard.SeekerConnectPresenter.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-wallet-standard.SeekerConnectWalletOptions.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-wallet-standard.SeekerLink.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-wallet-standard.StoredAuthorization.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/types/_solana-mobile_seeker-connect-wallet-standard.SeekerChain.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/types/_solana-mobile_seeker-connect-wallet-standard.SeekerConnectErrorCode.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/types/_solana-mobile_seeker-connect-wallet-standard.SeekerConnectWalletFeatures.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/types/_solana-mobile_seeker-connect-wallet-standard.SeekerConnectWalletOptionalFeatures.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/variables/_solana-mobile_seeker-connect-wallet-standard.SeekerConnectErrorCode.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/variables/_solana-mobile_seeker-connect-wallet-standard.SeekerConnectWalletName.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/functions/_solana-mobile_seeker-connect-wallet-standard.createLocalStorageAuthorizationCache.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/functions/_solana-mobile_seeker-connect-wallet-standard.createMemoryAuthorizationCache.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/functions/_solana-mobile_seeker-connect-wallet-standard.registerSeekerConnect.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/modules/_solana-mobile_seeker-connect-web.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/classes/_solana-mobile_seeker-connect-web.SeekerConnectError.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.AuthorizationCache.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.DappIdentity.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.SeekerAccount.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.SeekerAuthorization.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.SeekerAuthorizeRequest.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.SeekerConnectConfig.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.SeekerLink.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.SeekerSignAndSendOptions.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.SeekerSignInPayload.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.SeekerSignInResult.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.SeekerTransactOptions.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.SeekerWallet.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.SeekerWalletCapabilities.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/interfaces/_solana-mobile_seeker-connect-web.StoredAuthorization.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/types/_solana-mobile_seeker-connect-web.SeekerChain.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/types/_solana-mobile_seeker-connect-web.SeekerConnectErrorCode.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/variables/_solana-mobile_seeker-connect-web.DEFAULT_SEEKER_CHAIN.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/variables/_solana-mobile_seeker-connect-web.SeekerConnectErrorCode.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 	<url>
 		<loc>https://solana-mobile.github.io/seeker-connect/api/functions/_solana-mobile_seeker-connect-web.createNostrSeekerLink.html</loc>
-		<lastmod>2026-10-05T23:07:55.653Z</lastmod>
+		<lastmod>2026-10-08T15:53:21.386Z</lastmod>
 	</url>
 </urlset>
