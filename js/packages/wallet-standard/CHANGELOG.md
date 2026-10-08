@@ -1,5 +1,14 @@
 # @solana-mobile/seeker-connect-wallet-standard
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [bfa343e]
+    - @solana-mobile/seeker-connect-web@0.1.2
+    - @solana-mobile/seeker-connect-core@0.1.2
+    - @solana-mobile/seeker-connect-ui@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

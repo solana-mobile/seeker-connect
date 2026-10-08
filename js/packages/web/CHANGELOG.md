@@ -1,5 +1,12 @@
 # @solana-mobile/seeker-connect-web
 
+## 0.1.2
+
+### Patch Changes
+
+- bfa343e: Update `@solana-mobile/mobile-wallet-adapter-protocol` to 3.0.0.
+    - @solana-mobile/seeker-connect-core@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes
