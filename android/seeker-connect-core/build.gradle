@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias libs.plugins.kotlin.jvm
@@ -17,6 +18,9 @@ kotlin {
         jvmTarget = JvmTarget.JVM_11
         // No DefaultImpls bridges: no legacy consumers, and they are unreachable for the coverage gate.
         jvmDefault = JvmDefaultMode.NO_COMPATIBILITY
+        // Readable by consumers on Kotlin 2.1 (React Native apps).
+        languageVersion = KotlinVersion.KOTLIN_2_1
+        apiVersion = KotlinVersion.KOTLIN_2_1
     }
 }
 

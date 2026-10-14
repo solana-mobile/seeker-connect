@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias libs.plugins.android.library
@@ -27,6 +28,9 @@ android {
     kotlin {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_11
+            // Readable by consumers on Kotlin 2.1 (React Native apps).
+            languageVersion = KotlinVersion.KOTLIN_2_1
+            apiVersion = KotlinVersion.KOTLIN_2_1
         }
     }
 
