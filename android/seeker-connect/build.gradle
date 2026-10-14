@@ -4,6 +4,8 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 plugins {
     alias libs.plugins.android.library
     id 'jacoco'
+    id 'maven-publish'
+    id 'signing'
 }
 
 android {
@@ -51,6 +53,63 @@ android {
             }
         }
     }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+}
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = group
+            artifactId = 'seeker-connect'
+            pom {
+                name = 'Seeker Connect - Android'
+                description = 'Android SDK for Seeker Connect: a direct, branded connection to a Solana Mobile certified device\'s wallet, built on Mobile Wallet Adapter.'
+                url = 'https://github.com/solana-mobile/seeker-connect'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'Solana Mobile Engineering'
+                        email = 'eng@solanamobile.com'
+                        organization = 'Solana Mobile Inc.'
+                        organizationUrl = 'https://solanamobile.com'
+                    }
+                }
+                organization {
+                    name = 'Solana Mobile Inc.'
+                    url = 'https://solanamobile.com'
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/solana-mobile/seeker-connect.git'
+                    developerConnection = 'scm:git:ssh://github.com/solana-mobile/seeker-connect.git'
+                    url = 'https://github.com/solana-mobile/seeker-connect/tree/main'
+                }
+            }
+
+            afterEvaluate {
+                from components.findByName('release')
+            }
+        }
+    }
+}
+
+signing {
+    // Signing private key and password provided by ORG_GRADLE_PROJECT_signingKey and
+    // ORG_GRADLE_PROJECT_signingPassword, respectively
+    def signingKey = findProperty('signingKey')
+    def signingPassword = findProperty('signingPassword')
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.release
 }
 
 dependencies {
