@@ -6,11 +6,15 @@ plugins {
     alias libs.plugins.kotlin.jvm
     id 'java-test-fixtures'
     id 'jacoco'
+    id 'maven-publish'
+    id 'signing'
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+    withSourcesJar()
+    withJavadocJar()
 }
 
 kotlin {
@@ -33,6 +37,53 @@ dependencies {
 
     testImplementation libs.kotlin.test.junit
     testImplementation libs.kotlinx.coroutines.test
+}
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = group
+            artifactId = 'seeker-connect-core'
+            from components.java
+            pom {
+                name = 'Seeker Connect - Core'
+                description = 'Platform-agnostic Seeker Connect core: the client, models, error taxonomy, and the SeekerLink port each platform implements.'
+                url = 'https://github.com/solana-mobile/seeker-connect'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'Solana Mobile Engineering'
+                        email = 'eng@solanamobile.com'
+                        organization = 'Solana Mobile Inc.'
+                        organizationUrl = 'https://solanamobile.com'
+                    }
+                }
+                organization {
+                    name = 'Solana Mobile Inc.'
+                    url = 'https://solanamobile.com'
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/solana-mobile/seeker-connect.git'
+                    developerConnection = 'scm:git:ssh://github.com/solana-mobile/seeker-connect.git'
+                    url = 'https://github.com/solana-mobile/seeker-connect/tree/main'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    // Signing private key and password provided by ORG_GRADLE_PROJECT_signingKey and
+    // ORG_GRADLE_PROJECT_signingPassword, respectively
+    def signingKey = findProperty('signingKey')
+    def signingPassword = findProperty('signingPassword')
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.release
 }
 
 jacocoTestCoverageVerification {
