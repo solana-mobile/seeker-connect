@@ -1,0 +1,76 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    alias libs.plugins.android.library
+    id 'jacoco'
+}
+
+android {
+    namespace = "com.solanamobile.seekerconnect.android"
+    compileSdk = 37
+
+    defaultConfig {
+        minSdk 23
+    }
+
+    buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
+    }
+
+    buildFeatures {
+        buildConfig = false
+    }
+
+    testOptions {
+        unitTests {
+            // Robolectric reads the merged manifest (the <queries> declaration).
+            includeAndroidResources = true
+            all {
+                jacoco {
+                    includeNoLocationClasses = true
+                    excludes = ['jdk.internal.*']
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    api project(':seeker-connect-core')
+    api libs.androidx.activity
+    implementation libs.mwa.clientlib
+
+    testImplementation testFixtures(project(':seeker-connect-core'))
+    testImplementation libs.kotlin.test.junit
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.robolectric
+    testImplementation libs.androidx.test.core
+}
+
+def coverageVerification = tasks.register('jacocoDebugUnitTestCoverageVerification', JacocoCoverageVerification) {
+    dependsOn 'testDebugUnitTest'
+    executionData.from(layout.buildDirectory.file('outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec'))
+    classDirectories.from(layout.buildDirectory.dir('intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes'))
+    sourceDirectories.from('src/main/kotlin')
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                minimum = 1.0
+            }
+        }
+    }
+}
+tasks.named('check') { dependsOn coverageVerification }

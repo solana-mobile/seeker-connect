@@ -1,0 +1,46 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    alias libs.plugins.kotlin.jvm
+    id 'java-test-fixtures'
+    id 'jacoco'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+        // No DefaultImpls bridges: no legacy consumers, and they are unreachable for the coverage gate.
+        jvmDefault = JvmDefaultMode.NO_COMPATIBILITY
+    }
+}
+
+dependencies {
+    api libs.kotlinx.coroutines.core
+
+    // The SeekerLink contract suite, run by every SeekerLink implementation's tests.
+    testFixturesApi libs.kotlin.test.junit
+    testFixturesApi libs.kotlinx.coroutines.test
+
+    testImplementation libs.kotlin.test.junit
+    testImplementation libs.kotlinx.coroutines.test
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                minimum = 1.0
+            }
+        }
+    }
+}
+
+test.finalizedBy jacocoTestReport
+check.dependsOn jacocoTestCoverageVerification
