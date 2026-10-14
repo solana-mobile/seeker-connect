@@ -40,6 +40,7 @@ import com.solanamobile.seekerconnect.compose.SeekerConnectButtonVariant
 import com.solanamobile.seekerconnect.compose.SeekerConnectDialogState
 import com.solanamobile.seekerconnect.compose.SeekerConnectDialogs
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class MainActivity : ComponentActivity() {
     private val dialogs = SeekerConnectDialogState()
@@ -86,6 +87,8 @@ private fun ExampleScreen(
                 "$name: ${action()}"
             } catch (e: SeekerConnectException) {
                 "$name failed: ${e.code}"
+            } catch (e: IOException) {
+                "$name failed: RPC unreachable (${e.message})"
             } finally {
                 busy = false
             }
@@ -120,7 +123,9 @@ private fun ExampleScreen(
             }
             Action("Sign transaction", busy, foreground) {
                 run("signTransaction") {
-                    val transaction = buildMemoTransaction(account.publicKey, fetchRecentBlockhash(), "Seeker Connect example")
+                    // Signing alone needs no live blockhash.
+                    val blockhash = runCatching { fetchRecentBlockhash() }.getOrDefault(PLACEHOLDER_BLOCKHASH)
+                    val transaction = buildMemoTransaction(account.publicKey, blockhash, "Seeker Connect example")
                     "${seekerConnect.signTransactions(activity, listOf(transaction)).single().size} bytes"
                 }
             }

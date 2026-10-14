@@ -55,7 +55,8 @@ Each connection targets, in order:
    shared App Link domain of certified wallets);
 3. any MWA wallet, through the system chooser for the `solana-wallet:` scheme.
 
-A URI is used only when an installed MWA wallet handles it, so a browser is
+An https URI is used only when the system opens it in an installed MWA wallet,
+which requires that wallet to be its verified App Link handler; a browser is
 never launched. `walletAvailability()` reports `CERTIFIED`, `OTHER`, or `NONE`
 for the same check, e.g. to decide whether to show a "Connect with Seeker"
 button.

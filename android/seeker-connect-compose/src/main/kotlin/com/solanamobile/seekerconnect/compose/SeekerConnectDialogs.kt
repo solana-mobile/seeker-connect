@@ -21,7 +21,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -157,7 +159,10 @@ private fun Card(
                 .border(1.dp, if (darkTheme) Color(0xFF2D2D2D) else Color(0xFFABACAC), CardShape)
                 .semantics { contentDescription = title },
         ) {
-            Column(Modifier.padding(bottom = 14.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                Modifier.verticalScroll(rememberScrollState()).padding(bottom = 14.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
                 Box(Modifier.padding(top = 69.dp).height(124.dp), contentAlignment = Alignment.Center) { icon(foreground) }
                 Text(
                     title,

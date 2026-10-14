@@ -46,6 +46,15 @@ class MwaSeekerLinkTest {
     }
 
     @Test
+    fun `an unverified wallet declaring the first-connect App Link is not treated as certified`() = runBlocking {
+        mwa.scriptInstalledWallets(certified = false, generic = true)
+        mwa.installUnverifiedWallet(mwa.config.firstConnectWalletBaseUri)
+        assertEquals(WalletAvailability.OTHER, mwa.link.walletAvailability(mwa.config))
+        transact { }
+        assertEquals(listOf<String?>(null), mwa.targetedBaseUris())
+    }
+
+    @Test
     fun `sends the dapp identity, chain, and sign-in payload`() = runBlocking {
         transact { it.authorize(signInPayload = SeekerSignInPayload(statement = "hi", resources = listOf("https://dapp.example.com/terms"))) }
         val (method, params) = mwa.requests.single()

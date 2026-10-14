@@ -2,7 +2,9 @@ package com.solanamobile.seekerconnect.example
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -32,24 +34,24 @@ fun buildMemoTransaction(feePayer: ByteArray, recentBlockhash: ByteArray, memo: 
     return shortvec(1) + ByteArray(64) + message
 }
 
-/**
- * The latest devnet blockhash, or a placeholder (rejected by a real cluster)
- * when the RPC is unreachable.
- */
+/** Stands in for a recent blockhash when the RPC is unreachable; a cluster rejects it. */
+val PLACEHOLDER_BLOCKHASH = ByteArray(32) { 1 }
+
+/** The latest devnet blockhash; throws [IOException] when the RPC is unreachable or answers unexpectedly. */
 suspend fun fetchRecentBlockhash(): ByteArray = withContext(Dispatchers.IO) {
+    val connection = URL(RPC_URL).openConnection() as HttpURLConnection
+    connection.connectTimeout = 4_000
+    connection.readTimeout = 4_000
+    connection.requestMethod = "POST"
+    connection.setRequestProperty("content-type", "application/json")
+    connection.doOutput = true
+    connection.outputStream.use {
+        it.write("""{"jsonrpc":"2.0","id":1,"method":"getLatestBlockhash"}""".encodeToByteArray())
+    }
+    val body = connection.inputStream.use { it.readBytes().decodeToString() }
     try {
-        val connection = URL(RPC_URL).openConnection() as HttpURLConnection
-        connection.connectTimeout = 4_000
-        connection.readTimeout = 4_000
-        connection.requestMethod = "POST"
-        connection.setRequestProperty("content-type", "application/json")
-        connection.doOutput = true
-        connection.outputStream.use {
-            it.write("""{"jsonrpc":"2.0","id":1,"method":"getLatestBlockhash"}""".encodeToByteArray())
-        }
-        val body = connection.inputStream.use { it.readBytes().decodeToString() }
         base58Decode(JSONObject(body).getJSONObject("result").getJSONObject("value").getString("blockhash"))
-    } catch (e: Exception) {
-        ByteArray(32) { 1 }
+    } catch (e: JSONException) {
+        throw IOException("unexpected RPC response", e)
     }
 }

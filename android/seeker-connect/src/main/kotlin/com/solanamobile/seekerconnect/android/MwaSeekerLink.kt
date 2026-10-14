@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.solana.mobilewalletadapter.clientlib.scenario.LocalAssociationIntentCreator
 import com.solana.mobilewalletadapter.clientlib.scenario.LocalAssociationScenario
@@ -55,20 +56,25 @@ class MwaSeekerLink internal constructor(
         val intent = LocalAssociationIntentCreator
             .createAssociationIntent(endpointPrefix, scenario.port, scenario.session)
             .setPackage(walletPackage)
-        val established = scenario.start()
-        val launcher = onMain {
-            host.activityResultRegistry.register(
-                "seeker-connect-${UUID.randomUUID()}",
-                ActivityResultContracts.StartActivityForResult(),
-            ) {
-                // The wallet returned before associating; association can no longer complete.
-                if (!established.isDone) scenario.close()
-            }
-        }
+        var launcher: ActivityResultLauncher<Intent>? = null
         try {
+            val established = scenario.start()
+            // Registered even if the caller is cancelled mid-switch, so the finally block can unregister it.
+            val registered = withContext(NonCancellable) {
+                onMain {
+                    host.activityResultRegistry.register(
+                        "seeker-connect-${UUID.randomUUID()}",
+                        ActivityResultContracts.StartActivityForResult(),
+                    ) {
+                        // The wallet returned before associating; association can no longer complete.
+                        if (!established.isDone) scenario.close()
+                    }
+                }
+            }
+            launcher = registered
             onMain {
                 try {
-                    launcher.launch(intent)
+                    registered.launch(intent)
                 } catch (e: ActivityNotFoundException) {
                     throw SeekerConnectException(Code.NO_WALLET_FOUND, "No wallet handles the association intent", e)
                 }
@@ -82,14 +88,15 @@ class MwaSeekerLink internal constructor(
         } finally {
             withContext(NonCancellable) {
                 withTimeoutOrNull(CLOSE_TIMEOUT_MS) { scenario.close().await() }
-                onMain { launcher.unregister() }
+                launcher?.let { onMain { it.unregister() } }
             }
         }
     }
 
     /**
      * Where to launch: [walletUriBase], then the first-connect URI, each only
-     * when a wallet handles it; then any MWA wallet through the generic scheme.
+     * when the system opens it in an MWA wallet; then any MWA wallet through
+     * the generic scheme.
      */
     private fun target(config: SeekerConnectConfig, walletUriBase: String?): Pair<Uri?, String?> {
         for (baseUri in listOfNotNull(walletUriBase, config.firstConnectWalletBaseUri)) {
@@ -102,23 +109,22 @@ class MwaSeekerLink internal constructor(
     }
 
     /**
-     * The wallet that handles [baseUri]'s association URI. Only packages that
-     * also handle the MWA scheme count, so a browser never matches; when
-     * several do, the first is launched.
+     * The wallet the system opens for [baseUri]'s association URI. Resolution
+     * honors App Link verification: an https URI resolves to a wallet only when
+     * that wallet is its verified (or user-approved) handler; otherwise it
+     * resolves to a browser or the chooser, which are not MWA wallets.
      */
-    private fun walletFor(baseUri: String): String? {
-        val wallets = mwaWallets()
-        return handlers(associationUri(Uri.parse(baseUri))).firstOrNull { it in wallets }
-    }
+    private fun walletFor(baseUri: String): String? =
+        packageManager.resolveActivity(viewIntent(associationUri(Uri.parse(baseUri))), PackageManager.MATCH_DEFAULT_ONLY)
+            ?.activityInfo?.packageName
+            ?.takeIf { it in mwaWallets() }
 
-    private fun mwaWallets(): Set<String> = handlers(associationUri(null)).toSet()
-
-    private fun handlers(uri: Uri): List<String> = packageManager
-        .queryIntentActivities(
-            Intent(Intent.ACTION_VIEW, uri).addCategory(Intent.CATEGORY_BROWSABLE),
-            PackageManager.MATCH_DEFAULT_ONLY,
-        )
+    private fun mwaWallets(): Set<String> = packageManager
+        .queryIntentActivities(viewIntent(associationUri(null)), PackageManager.MATCH_DEFAULT_ONLY)
         .map { it.activityInfo.packageName }
+        .toSet()
+
+    private fun viewIntent(uri: Uri) = Intent(Intent.ACTION_VIEW, uri).addCategory(Intent.CATEGORY_BROWSABLE)
 
     /** The local association URI as clientlib builds it, minus the per-session query; null [endpointPrefix] is the generic scheme. */
     private fun associationUri(endpointPrefix: Uri?): Uri =

@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.ComponentName
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ActivityInfo
+import android.content.pm.ResolveInfo
 import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.test.core.app.ApplicationProvider
@@ -86,6 +88,7 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
     private val authorizeRequests = CopyOnWriteArrayList<ObservedAuthorizeRequest>()
     private val deauthorizedTokens = CopyOnWriteArrayList<String>()
     private val installed = mutableSetOf<ComponentName>()
+    private val scriptedResolutions = mutableListOf<Pair<Intent, String>>()
 
     init {
         install(BROWSER, filter("https"))
@@ -94,6 +97,8 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
 
     override fun scriptInstalledWallets(certified: Boolean, generic: Boolean, walletUriBases: Set<String>) {
         installed.filter { it.packageName != BROWSER }.forEach { packageManager.clearIntentFilterForActivity(it) }
+        scriptedResolutions.forEach { (intent, packageName) -> packageManager.removeResolveInfosForIntent(intent, packageName) }
+        scriptedResolutions.clear()
         val baseUris = walletUriBases + if (certified) setOf(config.firstConnectWalletBaseUri) else emptySet()
         if (baseUris.isNotEmpty()) {
             install(
@@ -101,8 +106,32 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
                 filter(AssociationContract.SCHEME_MOBILE_WALLET_ADAPTER),
                 *baseUris.map { filter("https", Uri.parse(it).host) }.toTypedArray(),
             )
+            baseUris.forEach { systemOpens(it, CERTIFIED_WALLET) }
         }
         if (generic) install(OTHER_WALLET, filter(AssociationContract.SCHEME_MOBILE_WALLET_ADAPTER))
+    }
+
+    /** Installs an MWA wallet that declares [baseUri]'s App Link without being its verified handler. */
+    fun installUnverifiedWallet(baseUri: String) {
+        install(UNVERIFIED_WALLET, filter(AssociationContract.SCHEME_MOBILE_WALLET_ADAPTER), filter("https", Uri.parse(baseUri).host))
+        systemOpens(baseUri, BROWSER)
+    }
+
+    /**
+     * Scripts which app the system opens for [baseUri]'s association URI.
+     * App Link verification decides this on a device; Robolectric does not model it.
+     */
+    private fun systemOpens(baseUri: String, packageName: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(baseUri).buildUpon().appendEncodedPath(AssociationContract.LOCAL_PATH_SUFFIX).build())
+            .addCategory(Intent.CATEGORY_BROWSABLE)
+        val resolveInfo = ResolveInfo().apply {
+            activityInfo = ActivityInfo().apply {
+                this.packageName = packageName
+                name = "$packageName.MainActivity"
+            }
+        }
+        packageManager.addResolveInfoForIntent(intent, resolveInfo)
+        scriptedResolutions += intent to packageName
     }
 
     override fun scriptAuthorizeDecline() {
@@ -296,6 +325,7 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
         const val CLIENT_TIMEOUT_MS = 5_000
         private const val CERTIFIED_WALLET = "com.example.certifiedwallet"
         private const val OTHER_WALLET = "com.example.otherwallet"
+        private const val UNVERIFIED_WALLET = "com.example.unverifiedwallet"
         private const val BROWSER = "com.example.browser"
     }
 }
