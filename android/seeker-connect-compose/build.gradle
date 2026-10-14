@@ -108,8 +108,11 @@ signing {
     // ORG_GRADLE_PROJECT_signingPassword, respectively
     def signingKey = findProperty('signingKey')
     def signingPassword = findProperty('signingPassword')
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign publishing.publications.release
+    // Unsigned without a key, so local builds can publishToMavenLocal; releases always have one.
+    if (signingKey) {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+        sign publishing.publications.release
+    }
 }
 
 dependencies {
