@@ -4,6 +4,8 @@ androidGradlePlugin = "9.2.1"
 kotlin = "2.4.10"
 kotlinxCoroutines = "1.11.0"
 mobileWalletAdapter = "2.2.0"
+multimult = "0.2.6"
+web3Core = "0.4.0-beta1"
 androidxActivity = "1.13.0"
 androidxTest = "1.7.0"
 composeBom = "2026.08.00"
@@ -14,6 +16,8 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 mwa-clientlib = { module = "com.solanamobile:mobile-wallet-adapter-clientlib", version.ref = "mobileWalletAdapter" }
+multimult = { module = "io.github.funkatronics:multimult", version.ref = "multimult" }
+web3-solana = { module = "com.solanamobile:web3-solana", version.ref = "web3Core" }
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidxActivity" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidxTest" }

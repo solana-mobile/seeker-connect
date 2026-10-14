@@ -38,6 +38,6 @@ dependencies {
     implementation platform(libs.compose.bom)
     implementation libs.compose.material3
     implementation libs.androidx.activity.compose
-
-    testImplementation libs.kotlin.test.junit
+    implementation libs.multimult
+    implementation libs.web3.solana
 }

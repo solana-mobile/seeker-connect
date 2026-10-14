@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.funkatronics.encoders.Base58
 import com.solanamobile.seekerconnect.DappIdentity
 import com.solanamobile.seekerconnect.SeekerConnect
 import com.solanamobile.seekerconnect.SeekerConnectConfig
@@ -125,14 +126,14 @@ private fun ExampleScreen(
                 run("signTransaction") {
                     // Signing alone needs no live blockhash.
                     val blockhash = runCatching { fetchRecentBlockhash() }.getOrDefault(PLACEHOLDER_BLOCKHASH)
-                    val transaction = buildMemoTransaction(account.publicKey, blockhash, "Seeker Connect example")
+                    val transaction = memoTransaction(account.publicKey, blockhash)
                     "${seekerConnect.signTransactions(activity, listOf(transaction)).single().size} bytes"
                 }
             }
             Action("Sign and send transaction", busy, foreground) {
                 run("signAndSendTransaction") {
-                    val transaction = buildMemoTransaction(account.publicKey, fetchRecentBlockhash(), "Seeker Connect example")
-                    base58Encode(seekerConnect.signAndSendTransactions(activity, listOf(transaction)).single())
+                    val transaction = memoTransaction(account.publicKey, fetchRecentBlockhash())
+                    Base58.encodeToString(seekerConnect.signAndSendTransactions(activity, listOf(transaction)).single())
                 }
             }
             Action("Disconnect", busy, foreground) {
