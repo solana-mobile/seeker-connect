@@ -53,13 +53,15 @@ private fun ExampleScreen(host: ComponentActivity, viewModel: MainViewModel) {
         val account = state.account
         if (account == null) {
             SeekerConnectButton(onClick = { viewModel.connect(host) }, enabled = !state.busy)
-            SeekerConnectButton(
-                onClick = { viewModel.signIn(host) },
-                variant = SeekerConnectButtonVariant.SIGN_IN,
-                enabled = !state.busy,
-            )
         } else {
             Text("Connected as ${account.base58()}", color = foreground)
+        }
+        SeekerConnectButton(
+            onClick = { viewModel.signIn(host) },
+            variant = SeekerConnectButtonVariant.SIGN_IN,
+            enabled = !state.busy,
+        )
+        if (account != null) {
             Action("Sign message", state.busy, foreground) { viewModel.signMessage(host) }
             Action("Sign transaction", state.busy, foreground) { viewModel.signTransaction(host) }
             Action("Sign and send transaction", state.busy, foreground) { viewModel.signAndSendTransaction(host) }
