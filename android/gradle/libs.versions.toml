@@ -2,6 +2,7 @@
 # Versions match the mobile-wallet-adapter repo's catalog where they overlap.
 androidGradlePlugin = "9.2.1"
 kotlin = "2.4.10"
+nexusPublishPlugin = "2.0.0"
 kotlinxCoroutines = "1.11.0"
 mobileWalletAdapter = "2.1.1"
 multimult = "0.2.6"
@@ -42,3 +43,4 @@ android-application = { id = "com.android.application", version.ref = "androidGr
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+nexus-publish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexusPublishPlugin" }
