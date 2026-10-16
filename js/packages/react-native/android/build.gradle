@@ -50,13 +50,13 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.solanamobile:seeker-connect'
-    implementation 'com.solanamobile:seeker-connect-compose'
+    implementation "com.solanamobile:seeker-connect:${getExtOrDefault('seekerConnectAndroidVersion')}"
+    implementation "com.solanamobile:seeker-connect-compose:${getExtOrDefault('seekerConnectAndroidVersion')}"
     // Supplied by the app at the React Native version it uses.
     compileOnly "com.facebook.react:react-android:${getExtOrDefault('reactNativeVersion')}"
 
     testImplementation "com.facebook.react:react-android:${getExtOrDefault('reactNativeVersion')}"
-    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit:2.4.10'
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${getExtOrDefault('kotlinVersion')}"
     testImplementation 'org.robolectric:robolectric:4.16.1'
     testImplementation 'androidx.test:core:1.7.0'
 }
