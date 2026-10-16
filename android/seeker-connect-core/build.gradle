@@ -14,6 +14,8 @@ java {
 }
 
 kotlin {
+    // The kotlin-stdlib version consumers resolve; Kotlin 2.1 compilers can't read a newer one.
+    coreLibrariesVersion = "2.1.20"
     compilerOptions {
         jvmTarget = JvmTarget.JVM_11
         // No DefaultImpls bridges: no legacy consumers, and they are unreachable for the coverage gate.

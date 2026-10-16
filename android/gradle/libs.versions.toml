@@ -3,7 +3,7 @@
 androidGradlePlugin = "9.2.1"
 kotlin = "2.4.10"
 kotlinxCoroutines = "1.11.0"
-mobileWalletAdapter = "2.2.0"
+mobileWalletAdapter = "2.1.1"
 multimult = "0.2.6"
 web3Core = "0.4.0-beta1"
 rpcCore = "0.2.11-beta1"
@@ -11,7 +11,7 @@ ktor = "3.3.0"
 androidxActivity = "1.13.0"
 androidxLifecycle = "2.11.0"
 androidxTest = "1.7.0"
-composeBom = "2026.08.00"
+composeBom = "2026.06.01"
 robolectric = "4.16.1"
 
 [libraries]
