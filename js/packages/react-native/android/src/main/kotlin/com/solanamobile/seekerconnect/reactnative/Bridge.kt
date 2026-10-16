@@ -95,7 +95,9 @@ internal fun signAndSendOptions(options: ReadableMap?): SeekerSignAndSendOptions
     )
 }
 
-internal fun ReadableArray.strings(): List<String> = List(size()) { index -> getString(index) }
+// getString is nullable as of React Native 0.86.
+internal fun ReadableArray.strings(): List<String> =
+    List(size()) { index -> requireNotNull(getString(index)) { "Expected a string at index $index" } }
 
 internal fun ReadableArray.bytes(): List<ByteArray> = strings().map { Base64.decode(it, Base64.NO_WRAP) }
 
