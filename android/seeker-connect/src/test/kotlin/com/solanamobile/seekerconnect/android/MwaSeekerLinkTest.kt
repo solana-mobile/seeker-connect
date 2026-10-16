@@ -29,7 +29,6 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -179,32 +178,41 @@ class MwaSeekerLinkTest {
         val error = assertFailsWith<SeekerConnectException> { withTimeout(5_000) { session.await() } }
         assertEquals(Code.ASSOCIATION_FAILED, error.code)
         assertEquals(0, mwa.openSessions())
-        assertEquals(emptyList(), mwa.registeredResultKeys())
+        assertEquals(emptyList(), mwa.resultRegistryEntries())
     }
 
     @Test
-    fun `holds its result launcher only while the session runs`() = runBlocking {
-        assertEquals(1, transact { mwa.registeredResultKeys() }.size)
-        assertFalse(mwa.walletResultReachesASession())
+    fun `leaves nothing in the host's result registry once the wallet returns after the session`() = runBlocking {
+        assertEquals(1, transact { mwa.resultRegistryEntries() }.size)
+        mwa.walletReturns()
+        assertEquals(emptyList(), mwa.resultRegistryEntries())
     }
 
     @Test
-    fun `releases its result launcher when association times out`() = runBlocking {
+    fun `leaves nothing in the host's result registry when the wallet returns during the session`() = runBlocking {
+        transact { mwa.walletReturns() }
+        assertEquals(emptyList(), mwa.resultRegistryEntries())
+    }
+
+    @Test
+    fun `leaves nothing in the host's result registry after an association timeout`() = runBlocking {
         mwa.scriptUnresponsiveWallet()
         assertFailsWith<SeekerConnectException> {
             mwa.link.transact(mwa.host, mwa.config.copy(associationTimeoutMs = 100), null) { }
         }
-        assertFalse(mwa.walletResultReachesASession())
+        mwa.walletReturns()
+        assertEquals(emptyList(), mwa.resultRegistryEntries())
     }
 
     @Test
-    fun `releases its result launcher when cancelled`() = runBlocking {
+    fun `leaves nothing in the host's result registry after cancellation`() = runBlocking {
         mwa.scriptUnresponsiveWallet()
         val session = async(start = CoroutineStart.UNDISPATCHED) { transact { } }
-        while (mwa.registeredResultKeys().isEmpty()) delay(10)
+        while (mwa.resultRegistryEntries().isEmpty()) delay(10)
         session.cancel()
         assertFailsWith<CancellationException> { session.await() }
-        assertFalse(mwa.walletResultReachesASession())
+        mwa.walletReturns()
+        assertEquals(emptyList(), mwa.resultRegistryEntries())
     }
 
     @Test
@@ -214,7 +222,7 @@ class MwaSeekerLinkTest {
         assertEquals(Code.NO_WALLET_FOUND, error.code)
         assertEquals(1, mwa.sessionsStarted())
         assertEquals(0, mwa.openSessions())
-        assertEquals(emptyList(), mwa.registeredResultKeys(host))
+        assertEquals(emptyList(), mwa.resultRegistryEntries(host))
     }
 
     @Test

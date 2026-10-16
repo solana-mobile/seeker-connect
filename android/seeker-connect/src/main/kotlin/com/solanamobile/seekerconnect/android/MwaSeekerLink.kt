@@ -57,6 +57,9 @@ class MwaSeekerLink internal constructor(
             .createAssociationIntent(endpointPrefix, scenario.port, scenario.session)
             .setPackage(walletPackage)
         var launcher: ActivityResultLauncher<Intent>? = null
+        // Main thread only: the wallet was launched and its result has not come back; the session has ended.
+        var awaitingResult = false
+        var ended = false
         try {
             val established = scenario.start()
             // Registered even if the caller is cancelled mid-switch, so the finally block can unregister it.
@@ -66,8 +69,11 @@ class MwaSeekerLink internal constructor(
                         "seeker-connect-${UUID.randomUUID()}",
                         ActivityResultContracts.StartActivityForResult(),
                     ) {
+                        awaitingResult = false
                         // The wallet returned before associating; association can no longer complete.
                         if (!established.isDone) scenario.close()
+                        // Posted: the registry forgets a launched key only after this callback returns.
+                        if (ended) mainHandler.post { launcher?.unregister() }
                     }
                 }
             }
@@ -75,6 +81,7 @@ class MwaSeekerLink internal constructor(
             onMain {
                 try {
                     registered.launch(intent)
+                    awaitingResult = true
                 } catch (e: ActivityNotFoundException) {
                     throw SeekerConnectException(Code.NO_WALLET_FOUND, "No wallet handles the association intent", e)
                 }
@@ -88,7 +95,14 @@ class MwaSeekerLink internal constructor(
         } finally {
             withContext(NonCancellable) {
                 withTimeoutOrNull(CLOSE_TIMEOUT_MS) { scenario.close().await() }
-                launcher?.let { onMain { it.unregister() } }
+                launcher?.let {
+                    onMain {
+                        ended = true
+                        // Unregistering mid-launch strands the key and the late result in the host's registry,
+                        // so a launch still out is unregistered by its callback once the result arrives.
+                        if (!awaitingResult) it.unregister()
+                    }
+                }
             }
         }
     }
@@ -136,7 +150,8 @@ class MwaSeekerLink internal constructor(
     private companion object {
         const val CLOSE_TIMEOUT_MS = 5_000L
 
-        val mainDispatcher = Executor(Handler(Looper.getMainLooper())::post).asCoroutineDispatcher()
+        val mainHandler = Handler(Looper.getMainLooper())
+        val mainDispatcher = Executor(mainHandler::post).asCoroutineDispatcher()
 
         /** Runs [action] on the main thread, as the activity-result APIs require; immediately when already there. */
         suspend fun <R> onMain(action: () -> R): R =

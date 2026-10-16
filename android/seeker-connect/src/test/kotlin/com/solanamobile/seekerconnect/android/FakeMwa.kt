@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo
 import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.os.Bundle
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.test.core.app.ApplicationProvider
 import com.solana.mobilewalletadapter.clientlib.protocol.MobileWalletAdapterClient
@@ -180,18 +181,18 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
     /** The package each wallet launch was pinned to, in order; null when the system picks. */
     fun launchedPackages(): List<String?> = launches().map { it.`package` }
 
-    /** Activity-result keys [activity] has registered. */
-    fun registeredResultKeys(activity: ComponentActivity = host): List<String> =
-        savedRegistry(activity).getStringArrayList("KEY_COMPONENT_ACTIVITY_REGISTERED_KEYS").orEmpty()
-
-    /** The wallet finishes now; true when its result still reaches a session's launcher callback. */
-    fun walletResultReachesASession(): Boolean {
+    /** The latest launched wallet finishes, returning its result to [host]. */
+    fun walletReturns() {
         shadowOf(host).receiveResult(launches().last(), Activity.RESULT_CANCELED, null)
-        // Results with no callback to take them are parked as pending.
-        return savedRegistry(host).getBundle("KEY_COMPONENT_ACTIVITY_PENDING_RESULT")!!.isEmpty
+        shadowOf(Looper.getMainLooper()).idle()
     }
 
-    private fun savedRegistry(activity: ComponentActivity) = Bundle().also(activity.activityResultRegistry::onSaveInstanceState)
+    /** What [activity]'s result registry still holds: registered keys, and results parked for want of a callback. */
+    fun resultRegistryEntries(activity: ComponentActivity = host): List<String> {
+        val saved = Bundle().also(activity.activityResultRegistry::onSaveInstanceState)
+        return saved.getStringArrayList("KEY_COMPONENT_ACTIVITY_REGISTERED_KEYS").orEmpty() +
+            saved.getBundle("KEY_COMPONENT_ACTIVITY_PENDING_RESULT")!!.keySet()
+    }
 
     private fun launches(): List<Intent> {
         // Robolectric hands back the newest launch first.
