@@ -1,0 +1,31 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ '.github/**', 'android/**' ]
+  pull_request:
+    branches: [ main ]
+    paths: [ '.github/**', 'android/**' ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The runner image provides JDK 17 and the Android SDK.
+      - name: '[android] Check (tests, coverage gates, lint)'
+        working-directory: 'android/'
+        run: ./gradlew check --console=plain
+
+      - name: '[android] Build example'
+        working-directory: 'android/'
+        run: ./gradlew :example:assembleDebug --console=plain
