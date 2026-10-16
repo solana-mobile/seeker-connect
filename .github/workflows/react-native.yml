@@ -1,0 +1,94 @@
+name: React Native Smoke Test
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ '.github/**', 'js/**', 'android/**' ]
+  # Any base branch, so stacked pull requests are checked too.
+  pull_request:
+    paths: [ '.github/**', 'js/**', 'android/**' ]
+  release:
+    types: [ published ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.example.name }} (${{ matrix.version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        example:
+          - name: App
+            package_name: react-native
+            suffix: App
+        version: [ 74, 80, latest ]
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          cache: true
+          cache_dependency_path: 'js/pnpm-lock.yaml'
+          package_json_file: 'js/package.json'
+
+      - name: set up JDK 17
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      # The React Native package depends on the Android SDK's com.solanamobile coordinates.
+      - name: 'Publish the Android SDK to Maven Local'
+        working-directory: 'android/'
+        run: ./gradlew publishToMavenLocal --no-daemon
+
+      - name: 'Build Project'
+        working-directory: 'js/'
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build
+
+      - name: 'Setup React Native ${{ matrix.example.name }}'
+        working-directory: 'js/'
+        run: |
+          if [ "${{ matrix.version }}" = "latest" ]; then
+            npx @react-native-community/cli@latest init React${{ matrix.version }}${{ matrix.example.suffix }}
+          else
+            npx @react-native-community/cli@latest init React${{ matrix.version }}${{ matrix.example.suffix }} --version 0.${{ matrix.version }}.0
+          fi
+          sed -i 's/-Xmx2048m/-Xmx4g/' React${{ matrix.version }}${{ matrix.example.suffix }}/android/gradle.properties
+          printf '\nallprojects {\n    repositories {\n        mavenLocal()\n    }\n}\n' >> React${{ matrix.version }}${{ matrix.example.suffix }}/android/build.gradle
+
+      - name: 'Install ${{ matrix.example.package_name }}'
+        working-directory: 'js/'
+        run: |
+          cd React${{ matrix.version }}${{ matrix.example.suffix }}
+          npm install file:../packages/${{ matrix.example.package_name }}
+
+      - name: 'Build React Native ${{ matrix.example.name }}'
+        working-directory: 'js/'
+        run: |
+          cd React${{ matrix.version }}${{ matrix.example.suffix }}/android
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: 'Test the native module'
+        working-directory: 'js/'
+        run: |
+          cd React${{ matrix.version }}${{ matrix.example.suffix }}/android
+          ./gradlew :solana-mobile_seeker-connect-react-native:testDebugUnitTest --no-daemon --stacktrace
