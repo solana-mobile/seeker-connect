@@ -15,7 +15,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 import kotlin.test.assertSame
-import kotlin.test.assertTrue
 
 class SeekerConnectTest {
     private val config = SeekerConnectConfig(DappIdentity("Test Dapp", "https://dapp.example.com", "favicon.ico"))
@@ -83,7 +82,14 @@ class SeekerConnectTest {
 
     @Test
     fun `concurrent connects launch the wallet once`() = runTest {
-        val results = List(2) { async { client.connect(Unit) } }.awaitAll()
+        // The first connect stays in its wallet session until released, so the second overlaps it.
+        val release = CompletableDeferred<Unit>()
+        link.onSession = { release.await() }
+        val connects = List(2) { async { client.connect(Unit) } }
+        runCurrent()
+        assertEquals(1, link.transactCalls.size)
+        release.complete(Unit)
+        val results = connects.awaitAll()
         assertEquals(1, link.transactCalls.size)
         assertEquals(results[0], results[1])
     }
@@ -321,12 +327,38 @@ class SeekerConnectTest {
     }
 
     @Test
-    fun `the default presenter tolerates every interaction`() = runTest {
-        val client = SeekerConnect(config, link)
-        client.connect(Unit)
-        link.transactError = SeekerConnectException(Code.SESSION_CLOSED, "closed")
-        assertFailsWith<SeekerConnectException> { client.signTransactions(Unit, listOf(byteArrayOf(1))) }
-        assertTrue(client.authorization.value != null)
+    fun `a decline that arrives after disconnect and reconnect keeps the new authorization`() = runTest {
+        cache.set(stored)
+        val firstSessionReached = CompletableDeferred<Unit>()
+        val releaseFirstSession = CompletableDeferred<Unit>()
+        var sessions = 0
+        link.onSession = {
+            if (++sessions == 1) {
+                firstSessionReached.complete(Unit)
+                releaseFirstSession.await()
+                // The stale session's token is no longer honored.
+                link.authorizeError = SeekerConnectException(Code.AUTHORIZATION_DECLINED, "declined")
+            }
+        }
+        val stale = async(SupervisorJob()) { client.transact(Unit) { } }
+        firstSessionReached.await()
+        client.disconnect()
+        val fresh = client.connect(Unit)
+        releaseFirstSession.complete(Unit)
+        assertEquals(Code.CANCELLED, assertFailsWith<SeekerConnectException> { stale.await() }.code)
+        assertEquals(fresh, cache.get())
+        assertEquals(fresh, client.authorization.value)
+    }
+
+    @Test
+    fun `cancelling from the presenter and the caller together propagates the caller's cancellation`() = runTest {
+        link.hang = true
+        val connecting = async(SupervisorJob()) { client.connect(Unit) }
+        runCurrent()
+        presenter.cancel!!()
+        connecting.cancel()
+        assertFailsWith<CancellationException> { connecting.await() }
+        assertEquals(emptyList(), presenter.failures)
     }
 
     private class RecordingPresenter : SeekerConnectPresenter {

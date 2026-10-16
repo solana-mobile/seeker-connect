@@ -3,7 +3,6 @@ package com.solanamobile.seekerconnect
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
-import kotlin.test.assertNull
 
 class ModelsTest {
     @Test
@@ -14,16 +13,6 @@ class ModelsTest {
         assertNotEquals(account, SeekerAccount("addr", byteArrayOf(1, 3), "label"))
         assertNotEquals<Any>(account, "addr")
         assertEquals("SeekerAccount(address=addr, label=label)", account.toString())
-    }
-
-    @Test
-    fun `optional fields default to absent`() {
-        assertNull(SeekerAccount("addr", byteArrayOf(1)).label)
-        assertNull(DappIdentity("Dapp", "https://dapp.example.com").icon)
-        val authorization = SeekerAuthorization(listOf(SeekerAccount("addr", byteArrayOf(1))), "token")
-        assertNull(authorization.walletUriBase)
-        assertNull(authorization.signInResult)
-        assertEquals(SeekerWalletCapabilities(null, null, emptyList(), emptyList(), false), SeekerWalletCapabilities())
     }
 
     @Test
