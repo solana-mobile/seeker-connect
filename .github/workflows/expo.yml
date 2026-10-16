@@ -25,7 +25,7 @@ jobs:
           - name: App
             package_name: react-native
             suffix: app
-        version: [ 52, 53, 54, 57, latest ]
+        version: [ 54, 57, latest ]
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
