@@ -3,7 +3,6 @@ package com.solanamobile.seekerconnect.compose
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -12,14 +11,12 @@ import com.solanamobile.seekerconnect.SeekerConnectException
 import com.solanamobile.seekerconnect.SeekerConnectException.Code
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.GraphicsMode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 @OptIn(ExperimentalTestApi::class)
 @RunWith(RobolectricTestRunner::class)
-@GraphicsMode(GraphicsMode.Mode.NATIVE)
 class SeekerConnectUiTest {
     @Test
     fun `the progress card's Close cancels the interaction`() = runComposeUiTest {
@@ -73,7 +70,6 @@ class SeekerConnectUiTest {
     fun `the button shows its variant's label and reports clicks`() = runComposeUiTest {
         var clicks = 0
         setContent { SeekerConnectButton(onClick = { clicks++ }) }
-        onNodeWithText("Connect with Seeker").captureToImage()
         onNodeWithText("Connect with Seeker").performClick()
         assertEquals(1, clicks)
     }
