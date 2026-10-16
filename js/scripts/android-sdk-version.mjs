@@ -1,6 +1,6 @@
 // Writes the Android Seeker Connect SDK version the React Native package builds against, at publish time
 // only; the repository keeps the local main-SNAPSHOT build.
-//   release: the package's own version, which the same release publishes to Maven Central.
+//   release: the package's own version, which must already be on Maven Central.
 //   canary:  the latest released version. With none released yet, the package is left out of the canary.
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -17,20 +17,33 @@ function fail(message) {
 	process.exit(1);
 }
 
+/** The latest released version, or null when npm has never had the package; any other npm failure throws. */
 function latestRelease() {
 	try {
 		return execFileSync('npm', ['view', `${packageJson.name}@latest`, 'version'], {
 			encoding: 'utf8',
-			stdio: ['ignore', 'pipe', 'ignore'],
+			stdio: ['ignore', 'pipe', 'pipe'],
 		}).trim();
-	} catch {
-		return null; // shortcut: any registry error counts as "never released", which only skips a canary.
+	} catch (error) {
+		if (String(error.stderr).includes('E404')) return null;
+		throw error;
+	}
+}
+
+/** Fails unless the Android SDK artifacts the package depends on are on Maven Central at [version]. */
+async function requireOnMavenCentral(version) {
+	for (const artifact of ['seeker-connect', 'seeker-connect-compose']) {
+		const pom = `https://repo1.maven.org/maven2/com/solanamobile/${artifact}/${version}/${artifact}-${version}.pom`;
+		const response = await globalThis.fetch(pom, { method: 'HEAD' });
+		if (!response.ok)
+			fail(`${pom}: HTTP ${response.status}; the Android SDK ${version} must be on Maven Central first`);
 	}
 }
 
 const mode = process.argv[2];
 if (mode !== 'release' && mode !== 'canary') fail('usage: android-sdk-version.mjs release|canary');
 const version = mode === 'release' ? packageJson.version : latestRelease();
+if (mode === 'release') await requireOnMavenCentral(version);
 
 if (version === null) {
 	writeFileSync(packageJsonUrl, `${JSON.stringify({ ...packageJson, private: true }, null, '\t')}\n`);
