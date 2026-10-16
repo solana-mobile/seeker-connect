@@ -20,6 +20,7 @@ import com.solanamobile.seekerconnect.android.MwaSeekerLink
 import com.solanamobile.seekerconnect.android.SharedPreferencesAuthorizationCache
 import com.solanamobile.seekerconnect.compose.SeekerConnectDialogState
 import com.solanamobile.seekerconnect.compose.SeekerConnectDialogs
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -132,6 +133,11 @@ class SeekerConnectModule internal constructor(
                 promise.reject(e.code.name, e.message, e)
             } catch (e: IllegalArgumentException) {
                 promise.reject(INVALID_ARGUMENT, e.message, e)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                // Anything else (a mistyped bridge value, a bug) still settles the promise instead of crashing the app.
+                promise.reject(UNEXPECTED_ERROR, e.message, e)
             }
         }
     }
@@ -161,6 +167,7 @@ class SeekerConnectModule internal constructor(
         const val NOT_CONFIGURED = "NOT_CONFIGURED"
         const val NO_ACTIVITY = "NO_ACTIVITY"
         const val INVALID_ARGUMENT = "INVALID_ARGUMENT"
+        const val UNEXPECTED_ERROR = "UNEXPECTED_ERROR"
         private const val DIALOGS_TAG = "SeekerConnectDialogs"
 
         /** Shared by every client this module creates; drawn by the attached ComposeView. */
