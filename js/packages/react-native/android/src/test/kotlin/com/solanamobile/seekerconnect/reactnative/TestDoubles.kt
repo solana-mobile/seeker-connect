@@ -1,8 +1,6 @@
 package com.solanamobile.seekerconnect.reactnative
 
 import androidx.activity.ComponentActivity
-import com.facebook.react.bridge.Promise
-import com.facebook.react.bridge.WritableMap
 import com.solanamobile.seekerconnect.SeekerAccount
 import com.solanamobile.seekerconnect.SeekerAuthorization
 import com.solanamobile.seekerconnect.SeekerConnectConfig
@@ -15,8 +13,6 @@ import com.solanamobile.seekerconnect.SeekerWallet
 import com.solanamobile.seekerconnect.SeekerWalletCapabilities
 import com.solanamobile.seekerconnect.WalletAvailability
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 val ACCOUNT = SeekerAccount("Addr1", byteArrayOf(1, 2, 3), "Main")
 
@@ -84,50 +80,4 @@ class ScriptedLink : SeekerLink<ComponentActivity> {
             return payloads.map { byteArrayOf(9, it.size.toByte()) }
         }
     }
-}
-
-/** A [Promise] that records how it settled; [await] blocks until it does. */
-class RecordingPromise : Promise {
-    private val settled = CountDownLatch(1)
-
-    @Volatile var value: Any? = null
-    @Volatile var code: String? = null
-    @Volatile var rejected = false
-
-    fun await(): RecordingPromise {
-        check(settled.await(5, TimeUnit.SECONDS)) { "The promise never settled" }
-        return this
-    }
-
-    override fun resolve(value: Any?) {
-        this.value = value
-        settled.countDown()
-    }
-
-    private fun fail(code: String?) {
-        this.code = code
-        rejected = true
-        settled.countDown()
-    }
-
-    override fun reject(code: String?, message: String?) = fail(code)
-
-    override fun reject(code: String?, throwable: Throwable?) = fail(code)
-
-    override fun reject(code: String?, message: String?, throwable: Throwable?) = fail(code)
-
-    override fun reject(throwable: Throwable) = fail(null)
-
-    override fun reject(throwable: Throwable, userInfo: WritableMap) = fail(null)
-
-    override fun reject(code: String?, userInfo: WritableMap) = fail(code)
-
-    override fun reject(code: String?, throwable: Throwable?, userInfo: WritableMap) = fail(code)
-
-    override fun reject(code: String?, message: String?, userInfo: WritableMap) = fail(code)
-
-    override fun reject(code: String?, message: String?, throwable: Throwable?, userInfo: WritableMap?) = fail(code)
-
-    @Deprecated("Deprecated in Java")
-    override fun reject(message: String) = fail(null)
 }
