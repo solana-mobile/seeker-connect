@@ -1,6 +1,7 @@
 package com.solanamobile.seekerconnect.reactnative
 
 import android.util.Base64
+import android.view.View
 import android.view.ViewGroup
 import androidx.activity.ComponentActivity
 import androidx.test.core.app.ApplicationProvider
@@ -32,7 +33,8 @@ class SeekerConnectModuleTest {
         newClient = { config -> SeekerConnect(seekerConnectConfig(config), link, MemoryAuthorizationCache()) },
         values = BridgeValues(::JavaOnlyMap, ::JavaOnlyArray),
     )
-    private val activity = Robolectric.buildActivity(ComponentActivity::class.java).setup().get()
+    // A React Native activity has its content view set, which is what gives the cards' ComposeView its lifecycle owner.
+    private val activity = Robolectric.buildActivity(ComponentActivity::class.java).setup().get().apply { setContentView(View(this)) }
 
     private val config = JavaOnlyMap.of("identity", JavaOnlyMap.of("name", "Dapp", "uri", "https://dapp.example.com"))
 
