@@ -9,7 +9,7 @@
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"lint": "eslint .",
-		"publish-packages": "pnpm build && pnpm changeset publish --access public --no-git-checks",
+		"publish-packages": "node ./scripts/android-sdk-version.mjs release && pnpm build && pnpm changeset publish --access public --no-git-checks",
 		"test": "vitest run"
 	},
 	"packageManager": "pnpm@11.20.0+sha512.9a6f330a95b66446ea088faf1521405a8a01f07fde7124cc9958dfed52d4bb436737e65b08f85f37b46fcba375092558ac51262b816844b22f63406ed166bfee",

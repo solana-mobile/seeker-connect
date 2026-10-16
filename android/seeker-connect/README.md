@@ -4,6 +4,11 @@ The Seeker Connect Android SDK: a Kotlin-native client for connecting a dapp
 to a Solana Mobile certified device's own wallet, built on the official Mobile
 Wallet Adapter `clientlib`.
 
+## Requirements
+
+For now, apps using the SDK need compileSdk 36, Android Gradle plugin 8.9.1 or
+later, and Kotlin 2.0 or later.
+
 ## Transport
 
 Local WebSocket today: the dapp launches the wallet with an association intent
