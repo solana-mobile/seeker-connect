@@ -1,12 +1,15 @@
 package com.solanamobile.seekerconnect.compose
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.runAndroidComposeUiTest
 import androidx.compose.ui.test.runComposeUiTest
 import com.solanamobile.seekerconnect.SeekerConnectException
 import com.solanamobile.seekerconnect.SeekerConnectException.Code
@@ -70,10 +73,11 @@ class SeekerConnectUiTest {
     }
 
     @Test
-    fun `the button shows its variant's label and reports clicks`() = runComposeUiTest {
+    fun `the button shows its variant's label and reports clicks`() = runAndroidComposeUiTest<ComponentActivity> {
         var clicks = 0
         setContent { SeekerConnectButton(onClick = { clicks++ }) }
-        onNodeWithText("Connect with Seeker").captureToImage()
+        val root = activity!!.window.decorView
+        runOnUiThread { root.draw(Canvas(Bitmap.createBitmap(root.width, root.height, Bitmap.Config.ARGB_8888))) }
         onNodeWithText("Connect with Seeker").performClick()
         assertEquals(1, clicks)
     }

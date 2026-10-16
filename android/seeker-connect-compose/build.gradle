@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "com.solanamobile.seekerconnect.compose"
-    compileSdk = 37
+    compileSdk = 36
 
     defaultConfig {
         minSdk 23
@@ -34,6 +34,7 @@ android {
             languageVersion = KotlinVersion.KOTLIN_2_1
             apiVersion = KotlinVersion.KOTLIN_2_1
         }
+        coreLibrariesVersion = '2.1.20'
     }
 
     buildFeatures {

@@ -26,6 +26,7 @@ kotlin {
         languageVersion = KotlinVersion.KOTLIN_2_1
         apiVersion = KotlinVersion.KOTLIN_2_1
     }
+    coreLibrariesVersion = '2.1.20'
 }
 
 dependencies {

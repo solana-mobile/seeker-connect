@@ -50,8 +50,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.solanamobile:seeker-connect'
-    implementation 'com.solanamobile:seeker-connect-compose'
+    implementation "com.solanamobile:seeker-connect:${getExtOrDefault('sdkVersion')}"
+    implementation "com.solanamobile:seeker-connect-compose:${getExtOrDefault('sdkVersion')}"
+    implementation 'androidx.compose.foundation:foundation'
     // Supplied by the app at the React Native version it uses.
     compileOnly "com.facebook.react:react-android:${getExtOrDefault('reactNativeVersion')}"
 

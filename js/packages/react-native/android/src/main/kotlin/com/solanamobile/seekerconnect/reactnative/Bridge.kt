@@ -95,7 +95,8 @@ internal fun signAndSendOptions(options: ReadableMap?): SeekerSignAndSendOptions
     )
 }
 
-internal fun ReadableArray.strings(): List<String> = List(size()) { index -> getString(index) }
+internal fun ReadableArray.strings(): List<String> =
+    List(size()) { index -> requireNotNull(getString(index)) { "Item $index is not a string" } }
 
 internal fun ReadableArray.bytes(): List<ByteArray> = strings().map { Base64.decode(it, Base64.NO_WRAP) }
 
