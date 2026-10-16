@@ -74,7 +74,7 @@ jobs:
 
       - name: Publish canary packages to npm
         if: steps.pending-changesets.outputs.has_changesets == 'true'
-        run: pnpm changeset publish --tag canary --access public --no-git-checks
+        run: node ./scripts/android-sdk-version.mjs canary && pnpm changeset publish --tag canary --access public --no-git-checks
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 
@@ -116,6 +116,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Create Release PR or Publish to npm
+        id: changesets
         uses: changesets/action@63a615b9cd06ba9a3e6d13796c7fbcb080a60a0b # v1.8.0
         with:
           publish: pnpm publish-packages
@@ -124,3 +125,13 @@ jobs:
           cwd: ./js
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+
+      # The React Native package depends on the Android SDK at its own version; the v<version>
+      # release runs android.yml, which publishes the SDK to Maven Central at that version.
+      - name: Release the Android SDK at the same version
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          VERSION=$(node -p "require('./packages/react-native/package.json').version")
+          gh release create "v$VERSION" --title "v$VERSION" --notes "Android SDK $VERSION, released with the npm packages at the same version."
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
