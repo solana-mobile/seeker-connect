@@ -5,6 +5,7 @@ import com.solanamobile.seekerconnect.SeekerConnectConfig
 import com.solanamobile.seekerconnect.SeekerConnectException
 import com.solanamobile.seekerconnect.SeekerLink
 import com.solanamobile.seekerconnect.SeekerSignInPayload
+import com.solanamobile.seekerconnect.SeekerSignInResult
 import com.solanamobile.seekerconnect.SeekerWalletCapabilities
 import com.solanamobile.seekerconnect.WalletAvailability
 import kotlinx.coroutines.CancellationException
@@ -35,6 +36,10 @@ class SeekerLinkContractExpectations(
     val signedPayload: (ByteArray) -> ByteArray,
     /** The signature bytes the wallet double reports for a submitted transaction. */
     val transactionSignature: (ByteArray) -> ByteArray,
+    /** The signature the wallet double appends to a message it signs. */
+    val messageSignature: (ByteArray) -> ByteArray,
+    /** The sign-in proof the wallet double returns for a sign-in payload. */
+    val signInResult: SeekerSignInResult,
 )
 
 /** One authorize request as the wallet double received it. */
@@ -49,8 +54,14 @@ interface SeekerLinkContractObservations {
     /** Sessions ever established, including ones since closed. */
     fun sessionsOpened(): Int
 
-    /** Sessions currently open. */
+    /** Sessions ever started, established or not. */
+    fun sessionsStarted(): Int
+
+    /** Sessions started and not yet torn down, established or not. */
     fun openSessions(): Int
+
+    /** The Base58 addresses each message-signing request named, in order. */
+    fun signedMessageAddresses(): List<List<String>>
 
     /** The wallet base URI targeted by each wallet launch, in order; null for the generic `solana-wallet:` scheme. */
     fun targetedBaseUris(): List<String?>
@@ -161,7 +172,7 @@ abstract class SeekerLinkContractTest<H> {
     fun `cancelling mid-association closes the session and propagates the cancellation`() = runBlocking {
         context.scriptUnresponsiveWallet()
         val session = async(start = CoroutineStart.UNDISPATCHED) { transact { } }
-        delay(100)
+        while (context.observed.openSessions() == 0) delay(10)
         session.cancel()
         assertFailsWith<CancellationException> { session.await() }
         assertEquals(0, context.observed.openSessions())
@@ -171,6 +182,7 @@ abstract class SeekerLinkContractTest<H> {
     fun `cancelling during the block closes the session`() = runBlocking {
         val session = async(start = CoroutineStart.UNDISPATCHED) { transact { delay(Long.MAX_VALUE) } }
         while (context.observed.sessionsOpened() == 0) delay(10)
+        assertEquals(1, context.observed.openSessions())
         session.cancel()
         assertFailsWith<CancellationException> { session.await() }
         assertEquals(0, context.observed.openSessions())
@@ -261,14 +273,23 @@ abstract class SeekerLinkContractTest<H> {
     @Test
     fun `returns the wallet's sign-in proof for a sign-in payload`() = runBlocking {
         val result = transact { it.authorize(signInPayload = SIGN_IN_PAYLOAD) }.signInResult
-        assertSignInProof(result)
+        assertEquals(context.expected.signInResult, result)
         assertEquals(true, context.observed.authorizeRequests().single().hasSignInPayload)
     }
 
     @Test
     fun `signs the sign-in message itself when the wallet lacks sign-in support`() = runBlocking {
         context.scriptNoSignInSupport()
-        assertSignInProof(transact { it.authorize(signInPayload = SIGN_IN_PAYLOAD) }.signInResult)
+        val result = assertNotNull(transact { it.authorize(signInPayload = SIGN_IN_PAYLOAD) }.signInResult)
+        val account = context.expected.accounts.first()
+        assertEquals(account.address, result.address)
+        assertContentEquals(account.publicKey, result.publicKey)
+        assertTrue(
+            result.signedMessage.decodeToString()
+                .startsWith("${SIGN_IN_PAYLOAD.domain} wants you to sign in with your Solana account:\n${account.address}\n\n${SIGN_IN_PAYLOAD.statement}"),
+        )
+        assertContentEquals(context.expected.messageSignature(result.signedMessage), result.signature)
+        assertEquals(listOf(listOf(account.address)), context.observed.signedMessageAddresses())
     }
 
     @Test
@@ -293,6 +314,7 @@ abstract class SeekerLinkContractTest<H> {
             it.signMessages(listOf(context.expected.accounts.first().address), listOf(MESSAGE))
         }
         assertContentEquals(context.expected.signedPayload(MESSAGE), signed.single())
+        assertEquals(listOf(listOf(context.expected.accounts.first().address)), context.observed.signedMessageAddresses())
     }
 
     @Test
@@ -322,6 +344,7 @@ abstract class SeekerLinkContractTest<H> {
             transact(config = context.config.copy(associationTimeoutMs = 100)) { }
         }
         assertEquals(SeekerConnectException.Code.ASSOCIATION_FAILED, error.code)
+        assertEquals(1, context.observed.sessionsStarted())
         assertEquals(0, context.observed.openSessions())
     }
 
@@ -344,15 +367,6 @@ abstract class SeekerLinkContractTest<H> {
         }
         assertEquals(SeekerConnectException.Code.REQUEST_DECLINED, error.code)
         assertEquals(0, context.observed.openSessions())
-    }
-
-    private fun assertSignInProof(result: com.solanamobile.seekerconnect.SeekerSignInResult?) {
-        assertNotNull(result)
-        val account = context.expected.accounts.first()
-        assertEquals(account.address, result.address)
-        assertContentEquals(account.publicKey, result.publicKey)
-        assertTrue(result.signedMessage.isNotEmpty())
-        assertTrue(result.signature.isNotEmpty())
     }
 
     private companion object {

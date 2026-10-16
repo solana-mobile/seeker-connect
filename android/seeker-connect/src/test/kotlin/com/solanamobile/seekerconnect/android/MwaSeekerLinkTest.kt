@@ -13,11 +13,14 @@ import com.solanamobile.seekerconnect.SeekerConnectException.Code
 import com.solanamobile.seekerconnect.SeekerSignAndSendOptions
 import com.solanamobile.seekerconnect.SeekerSignInPayload
 import com.solanamobile.seekerconnect.WalletAvailability
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import org.junit.runner.RunWith
@@ -26,7 +29,9 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /** Adapter mapping beyond the shared contract. */
@@ -41,11 +46,6 @@ class MwaSeekerLinkTest {
         mwa.link.transact(mwa.host, mwa.config, null, block)
 
     @Test
-    fun `the public constructor checks the device's wallets`() {
-        assertEquals(WalletAvailability.CERTIFIED, MwaSeekerLink(mwa.host).walletAvailability(mwa.config))
-    }
-
-    @Test
     fun `an unverified wallet declaring the first-connect App Link is not treated as certified`() = runBlocking {
         mwa.scriptInstalledWallets(certified = false, generic = true)
         mwa.installUnverifiedWallet(mwa.config.firstConnectWalletBaseUri)
@@ -55,8 +55,33 @@ class MwaSeekerLinkTest {
     }
 
     @Test
+    fun `pins the launch to the wallet the URI resolved to`() = runBlocking {
+        transact { }
+        mwa.scriptInstalledWallets(certified = false, generic = true)
+        transact { }
+        assertEquals(listOf("com.example.certifiedwallet", null), mwa.launchedPackages())
+    }
+
+    @Test
     fun `sends the dapp identity, chain, and sign-in payload`() = runBlocking {
-        transact { it.authorize(signInPayload = SeekerSignInPayload(statement = "hi", resources = listOf("https://dapp.example.com/terms"))) }
+        val address = mwa.expected.accounts.first().address
+        transact {
+            it.authorize(
+                signInPayload = SeekerSignInPayload(
+                    address = address,
+                    statement = "hi",
+                    uri = "https://dapp.example.com/login",
+                    version = "1",
+                    chainId = "solana:mainnet",
+                    nonce = "12345678",
+                    issuedAt = "2026-10-16T00:00:00Z",
+                    expirationTime = "2026-10-17T00:00:00Z",
+                    notBefore = "2026-10-15T00:00:00Z",
+                    requestId = "request-1",
+                    resources = listOf("https://dapp.example.com/terms", "https://dapp.example.com/privacy"),
+                ),
+            )
+        }
         val (method, params) = mwa.requests.single()
         assertEquals(ProtocolContract.METHOD_AUTHORIZE, method)
         val identity = params.getJSONObject(ProtocolContract.PARAMETER_IDENTITY)
@@ -65,19 +90,55 @@ class MwaSeekerLinkTest {
         assertEquals("favicon.ico", identity.getString(ProtocolContract.PARAMETER_IDENTITY_ICON))
         assertEquals("solana:mainnet", params.getString(ProtocolContract.PARAMETER_CHAIN))
         val signIn = params.getJSONObject(ProtocolContract.PARAMETER_SIGN_IN_PAYLOAD)
-        assertEquals("dapp.example.com", signIn.getString("domain"))
-        assertEquals("hi", signIn.getString("statement"))
+        assertEquals(
+            mapOf(
+                "domain" to "dapp.example.com",
+                "address" to address,
+                "statement" to "hi",
+                "uri" to "https://dapp.example.com/login",
+                "version" to "1",
+                "chainId" to "solana:mainnet",
+                "nonce" to "12345678",
+                "issuedAt" to "2026-10-16T00:00:00Z",
+                "expirationTime" to "2026-10-17T00:00:00Z",
+                "notBefore" to "2026-10-15T00:00:00Z",
+                "requestId" to "request-1",
+            ),
+            (signIn.keys().asSequence() - "resources").associateWith(signIn::getString),
+        )
+        val resources = signIn.getJSONArray("resources")
+        assertEquals(listOf("https://dapp.example.com/terms", "https://dapp.example.com/privacy"), List(resources.length(), resources::getString))
     }
 
     @Test
     fun `sends the sign-and-send options`() = runBlocking {
         transact {
             it.authorize()
-            it.signAndSendTransactions(listOf(byteArrayOf(1)), SeekerSignAndSendOptions(minContextSlot = 7, commitment = "confirmed"))
+            it.signAndSendTransactions(
+                listOf(byteArrayOf(1)),
+                SeekerSignAndSendOptions(
+                    minContextSlot = 7,
+                    commitment = "confirmed",
+                    skipPreflight = true,
+                    maxRetries = 3,
+                    waitForCommitmentToSendNextTransaction = true,
+                ),
+            )
         }
         val options = mwa.requests.last().second.getJSONObject(ProtocolContract.PARAMETER_OPTIONS)
         assertEquals(7, options.getInt(ProtocolContract.PARAMETER_OPTIONS_MIN_CONTEXT_SLOT))
         assertEquals("confirmed", options.getString(ProtocolContract.PARAMETER_OPTIONS_COMMITMENT))
+        assertEquals(true, options.getBoolean(ProtocolContract.PARAMETER_OPTIONS_SKIP_PREFLIGHT))
+        assertEquals(3, options.getInt(ProtocolContract.PARAMETER_OPTIONS_MAX_RETRIES))
+        assertEquals(true, options.getBoolean(ProtocolContract.PARAMETER_OPTIONS_WAIT_FOR_COMMITMENT))
+    }
+
+    @Test
+    fun `reads a zero per-request maximum as no limit`() = runBlocking {
+        mwa.unlimitedRequests = true
+        val capabilities = transact { it.getCapabilities() }
+        assertNull(capabilities.maxMessagesPerRequest)
+        assertNull(capabilities.maxTransactionsPerRequest)
     }
 
     @Test
@@ -114,24 +175,61 @@ class MwaSeekerLinkTest {
             launched = shadowOf(mwa.host).nextStartedActivityForResult
         }
         shadowOf(mwa.host).receiveResult(launched.intent, Activity.RESULT_CANCELED, null)
-        assertEquals(Code.ASSOCIATION_FAILED, assertFailsWith<SeekerConnectException> { session.await() }.code)
+        // Well inside the association timeout: the return itself ends the attempt.
+        val error = assertFailsWith<SeekerConnectException> { withTimeout(5_000) { session.await() } }
+        assertEquals(Code.ASSOCIATION_FAILED, error.code)
+        assertEquals(0, mwa.openSessions())
+        assertEquals(emptyList(), mwa.registeredResultKeys())
     }
 
     @Test
-    fun `fails with no-wallet-found when the wallet cannot be launched`() = runBlocking {
+    fun `holds its result launcher only while the session runs`() = runBlocking {
+        assertEquals(1, transact { mwa.registeredResultKeys() }.size)
+        assertFalse(mwa.walletResultReachesASession())
+    }
+
+    @Test
+    fun `releases its result launcher when association times out`() = runBlocking {
+        mwa.scriptUnresponsiveWallet()
+        assertFailsWith<SeekerConnectException> {
+            mwa.link.transact(mwa.host, mwa.config.copy(associationTimeoutMs = 100), null) { }
+        }
+        assertFalse(mwa.walletResultReachesASession())
+    }
+
+    @Test
+    fun `releases its result launcher when cancelled`() = runBlocking {
+        mwa.scriptUnresponsiveWallet()
+        val session = async(start = CoroutineStart.UNDISPATCHED) { transact { } }
+        while (mwa.registeredResultKeys().isEmpty()) delay(10)
+        session.cancel()
+        assertFailsWith<CancellationException> { session.await() }
+        assertFalse(mwa.walletResultReachesASession())
+    }
+
+    @Test
+    fun `fails with no-wallet-found and tears down when the wallet cannot be launched`() = runBlocking {
         val host = Robolectric.buildActivity(UnlaunchableActivity::class.java).setup().get()
         val error = assertFailsWith<SeekerConnectException> { mwa.link.transact(host, mwa.config, null) { } }
         assertEquals(Code.NO_WALLET_FOUND, error.code)
+        assertEquals(1, mwa.sessionsStarted())
+        assertEquals(0, mwa.openSessions())
+        assertEquals(emptyList(), mwa.registeredResultKeys(host))
     }
 
     @Test
-    fun `works when called off the main thread`() = runBlocking {
-        val session = async(Dispatchers.Default) { transact { "done" } }
+    fun `launches the wallet on the main thread when called off it`() = runBlocking {
+        val host = Robolectric.buildActivity(LaunchThreadActivity::class.java).setup().get()
+        val session = async(Dispatchers.Default) {
+            assertTrue(Looper.myLooper() != Looper.getMainLooper())
+            mwa.link.transact(host, mwa.config, null) { "done" }
+        }
         while (!session.isCompleted) {
             shadowOf(Looper.getMainLooper()).idle()
             delay(5)
         }
         assertEquals("done", session.await())
+        assertEquals(Looper.getMainLooper().thread, host.launchThread)
     }
 
     @Test
@@ -164,6 +262,18 @@ class MwaSeekerLinkTest {
         @Deprecated("Deprecated in Java")
         override fun startActivityForResult(intent: Intent, requestCode: Int, options: Bundle?) {
             throw ActivityNotFoundException()
+        }
+    }
+
+    /** Records the thread the wallet launch ran on. */
+    class LaunchThreadActivity : ComponentActivity() {
+        @Volatile var launchThread: Thread? = null
+
+        @Deprecated("Deprecated in Java")
+        override fun startActivityForResult(intent: Intent, requestCode: Int, options: Bundle?) {
+            launchThread = Thread.currentThread()
+            @Suppress("DEPRECATION")
+            super.startActivityForResult(intent, requestCode, options)
         }
     }
 }

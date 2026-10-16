@@ -1,5 +1,6 @@
 package com.solanamobile.seekerconnect.android
 
+import android.app.Activity
 import android.app.Application
 import android.content.ComponentName
 import android.content.Intent
@@ -7,6 +8,7 @@ import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.content.pm.ResolveInfo
 import android.net.Uri
+import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.test.core.app.ApplicationProvider
 import com.solana.mobilewalletadapter.clientlib.protocol.MobileWalletAdapterClient
@@ -22,6 +24,7 @@ import com.solana.mobilewalletadapter.common.util.NotifyingCompletableFuture
 import com.solanamobile.seekerconnect.DappIdentity
 import com.solanamobile.seekerconnect.SeekerAccount
 import com.solanamobile.seekerconnect.SeekerConnectConfig
+import com.solanamobile.seekerconnect.SeekerSignInResult
 import com.solanamobile.seekerconnect.SeekerWalletCapabilities
 import com.solanamobile.seekerconnect.testing.ObservedAuthorizeRequest
 import com.solanamobile.seekerconnect.testing.SeekerLinkContractContext
@@ -58,7 +61,7 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
         walletUriBase = "https://wallet.example.com",
         capabilities = SeekerWalletCapabilities(
             maxMessagesPerRequest = 5,
-            maxTransactionsPerRequest = 5,
+            maxTransactionsPerRequest = 7,
             supportedTransactionVersions = listOf("legacy", 0),
             // clientlib reports sign-and-send support only when it is listed as a feature.
             features = listOf(ProtocolContract.FEATURE_ID_SIGN_TRANSACTIONS, ProtocolContract.FEATURE_ID_SIGN_AND_SEND_TRANSACTIONS),
@@ -66,7 +69,12 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
         ),
         signedPayload = { it + ByteArray(64) { 9 } },
         transactionSignature = { payload -> ByteArray(64) { payload.size.toByte() } },
+        messageSignature = { ByteArray(64) { 9 } },
+        signInResult = SeekerSignInResult(Base58.encode(PUBLIC_KEY), PUBLIC_KEY, "signed".encodeToByteArray(), ByteArray(64) { 7 }),
     )
+
+    /** The wallet reports 0 (no limit) for both per-request maximums. */
+    @Volatile var unlimitedRequests = false
 
     /** The protocol version every session negotiates. */
     @Volatile var protocolVersion = ProtocolVersion.V1
@@ -83,8 +91,10 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
     val requests = CopyOnWriteArrayList<Pair<String, JSONObject>>()
 
     private val opened = AtomicInteger()
+    private val started = AtomicInteger()
     private val open = AtomicInteger()
-    private val targets = mutableListOf<String?>()
+    private val launches = mutableListOf<Intent>()
+    private val messageAddresses = CopyOnWriteArrayList<List<String>>()
     private val authorizeRequests = CopyOnWriteArrayList<ObservedAuthorizeRequest>()
     private val deauthorizedTokens = CopyOnWriteArrayList<String>()
     private val installed = mutableSetOf<ComponentName>()
@@ -152,18 +162,41 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
 
     override fun sessionsOpened() = opened.get()
 
+    override fun sessionsStarted() = started.get()
+
     override fun openSessions() = open.get()
 
-    override fun targetedBaseUris(): List<String?> {
-        while (true) {
-            val uri = shadowOf(host).nextStartedActivityForResult?.intent?.data ?: break
-            targets += if (uri.scheme == AssociationContract.SCHEME_MOBILE_WALLET_ADAPTER) {
-                null
-            } else {
-                uri.buildUpon().clearQuery().path(uri.path!!.removeSuffix("/" + AssociationContract.LOCAL_PATH_SUFFIX)).toString()
-            }
+    override fun signedMessageAddresses(): List<List<String>> = messageAddresses.toList()
+
+    override fun targetedBaseUris(): List<String?> = launches().map { intent ->
+        val uri = intent.data!!
+        if (uri.scheme == AssociationContract.SCHEME_MOBILE_WALLET_ADAPTER) {
+            null
+        } else {
+            uri.buildUpon().clearQuery().path(uri.path!!.removeSuffix("/" + AssociationContract.LOCAL_PATH_SUFFIX)).toString()
         }
-        return targets.toList()
+    }
+
+    /** The package each wallet launch was pinned to, in order; null when the system picks. */
+    fun launchedPackages(): List<String?> = launches().map { it.`package` }
+
+    /** Activity-result keys [activity] has registered. */
+    fun registeredResultKeys(activity: ComponentActivity = host): List<String> =
+        savedRegistry(activity).getStringArrayList("KEY_COMPONENT_ACTIVITY_REGISTERED_KEYS").orEmpty()
+
+    /** The wallet finishes now; true when its result still reaches a session's launcher callback. */
+    fun walletResultReachesASession(): Boolean {
+        shadowOf(host).receiveResult(launches().last(), Activity.RESULT_CANCELED, null)
+        // Results with no callback to take them are parked as pending.
+        return savedRegistry(host).getBundle("KEY_COMPONENT_ACTIVITY_PENDING_RESULT")!!.isEmpty
+    }
+
+    private fun savedRegistry(activity: ComponentActivity) = Bundle().also(activity.activityResultRegistry::onSaveInstanceState)
+
+    private fun launches(): List<Intent> {
+        // Robolectric hands back the newest launch first.
+        launches += generateSequence { shadowOf(host).nextStartedActivityForResult?.intent }.toList().asReversed()
+        return launches.toList()
     }
 
     override fun authorizeRequests(): List<ObservedAuthorizeRequest> = authorizeRequests.toList()
@@ -194,21 +227,23 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
         private val fakeSession = object : MobileWalletAdapterSession(client, null) {
             override fun getSessionProperties() = SessionProperties(protocolVersion)
         }
-        private var associated = false
+        private var running = false
         private var closed = false
         @Volatile private var dropped = false
 
         override fun getSession() = fakeSession
 
+        @Synchronized
         override fun start(): NotifyOnCompleteFuture<MobileWalletAdapterClient> {
+            running = true
+            started.incrementAndGet()
+            open.incrementAndGet()
             if (responsive) {
                 client.receiverConnected { message ->
                     if (dropped) throw IOException("disconnected")
                     answer(JSONObject(message.decodeToString()))
                 }
-                associated = true
                 opened.incrementAndGet()
-                open.incrementAndGet()
                 established.complete(client)
             }
             return established
@@ -216,7 +251,7 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
 
         @Synchronized
         override fun close(): NotifyOnCompleteFuture<Void> {
-            if (associated && !closed) open.decrementAndGet()
+            if (running && !closed) open.decrementAndGet()
             closed = true
             established.completeExceptionally(ConnectionFailedException("Scenario closed while connecting"))
             return NotifyingCompletableFuture<Void>().apply { complete(null) }
@@ -264,8 +299,8 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
             JSONObject()
         }
         ProtocolContract.METHOD_GET_CAPABILITIES -> JSONObject()
-            .put(ProtocolContract.RESULT_MAX_TRANSACTIONS_PER_REQUEST, expected.capabilities.maxTransactionsPerRequest)
-            .put(ProtocolContract.RESULT_MAX_MESSAGES_PER_REQUEST, expected.capabilities.maxMessagesPerRequest)
+            .put(ProtocolContract.RESULT_MAX_TRANSACTIONS_PER_REQUEST, if (unlimitedRequests) 0 else expected.capabilities.maxTransactionsPerRequest)
+            .put(ProtocolContract.RESULT_MAX_MESSAGES_PER_REQUEST, if (unlimitedRequests) 0 else expected.capabilities.maxMessagesPerRequest)
             .put(ProtocolContract.RESULT_SUPPORTED_TRANSACTION_VERSIONS, JSONArray(expected.capabilities.supportedTransactionVersions))
             .put(ProtocolContract.RESULT_SUPPORTED_FEATURES, JSONArray(expected.capabilities.features))
             .put(ProtocolContract.RESULT_SUPPORTS_SIGN_AND_SEND_TRANSACTIONS, true)
@@ -273,6 +308,10 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
             if (declineSigning) {
                 ProtocolContract.ERROR_NOT_SIGNED
             } else {
+                if (method == ProtocolContract.METHOD_SIGN_MESSAGES) {
+                    val addresses = params.getJSONArray(ProtocolContract.PARAMETER_ADDRESSES)
+                    messageAddresses += List(addresses.length()) { Base58.encode(Base64.getDecoder().decode(addresses.getString(it))) }
+                }
                 JSONObject().put(ProtocolContract.RESULT_SIGNED_PAYLOADS, payloads(params).map(expected.signedPayload).toBase64Array())
             }
         ProtocolContract.METHOD_SIGN_AND_SEND_TRANSACTIONS ->
@@ -300,9 +339,9 @@ class FakeMwa : SeekerLinkContractContext<ComponentActivity>, SeekerLinkContract
                 put(
                     ProtocolContract.RESULT_SIGN_IN,
                     JSONObject()
-                        .put(ProtocolContract.RESULT_SIGN_IN_ADDRESS, PUBLIC_KEY.toBase64())
-                        .put(ProtocolContract.RESULT_SIGN_IN_SIGNED_MESSAGE, "signed".encodeToByteArray().toBase64())
-                        .put(ProtocolContract.RESULT_SIGN_IN_SIGNATURE, ByteArray(64) { 7 }.toBase64())
+                        .put(ProtocolContract.RESULT_SIGN_IN_ADDRESS, expected.signInResult.publicKey.toBase64())
+                        .put(ProtocolContract.RESULT_SIGN_IN_SIGNED_MESSAGE, expected.signInResult.signedMessage.toBase64())
+                        .put(ProtocolContract.RESULT_SIGN_IN_SIGNATURE, expected.signInResult.signature.toBase64())
                         .put(ProtocolContract.RESULT_SIGN_IN_SIGNATURE_TYPE, "ed25519"),
                 )
             }
