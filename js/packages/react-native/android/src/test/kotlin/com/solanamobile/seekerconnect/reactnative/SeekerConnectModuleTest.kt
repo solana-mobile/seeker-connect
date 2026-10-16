@@ -148,6 +148,14 @@ class SeekerConnectModuleTest {
     }
 
     @Test
+    fun `rejects instead of crashing when an option has the wrong type`() {
+        val options = JavaOnlyMap.of("skipPreflight", "true")
+        val promise = call { module.signAndSendTransactions(JavaOnlyArray.of(b64(1, 2)), options, it) }
+        assertEquals(SeekerConnectModule.UNEXPECTED_ERROR, promise.code)
+        assertTrue(link.sendOptions.isEmpty())
+    }
+
+    @Test
     fun `transact runs every request in one wallet session`() {
         val requests = JavaOnlyArray.of(
             JavaOnlyMap.of("method", "signMessages", "addresses", JavaOnlyArray.of("Addr1"), "payloads", JavaOnlyArray.of(b64(1))),
