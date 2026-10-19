@@ -86,15 +86,24 @@ function ExampleScreen() {
 
 	useEffect(() => {
 		(async () => {
-			await SeekerConnect.configure(CONFIG);
-			const restored = await SeekerConnect.restore();
-			if (restored) {
-				setAccount(address(restored.accounts[0].address));
-				append(`restored ${restored.accounts[0].address}`);
+			try {
+				await SeekerConnect.configure(CONFIG);
+			} catch (error) {
+				// Unconfigured, every wallet action would fail: leave them disabled.
+				append(`configure failed: ${describe(error)}`);
+				return;
 			}
-		})()
-			.catch((error) => append(`restore failed: ${describe(error)}`))
-			.finally(() => setReady(true));
+			try {
+				const restored = await SeekerConnect.restore();
+				if (restored) {
+					setAccount(address(restored.accounts[0].address));
+					append(`restored ${restored.accounts[0].address}`);
+				}
+			} catch (error) {
+				append(`restore failed: ${describe(error)}`);
+			}
+			setReady(true);
+		})();
 	}, [append]);
 
 	/** Runs [action] unless another action is running. */
