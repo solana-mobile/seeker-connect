@@ -20,12 +20,14 @@ import {
 	type SeekerConnectConfig,
 } from '@solana-mobile/seeker-connect-react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const CONFIG: SeekerConnectConfig = {
 	identity: { name: 'Seeker Connect Example', uri: 'https://solanamobile.com', icon: 'favicon.ico' },
 	chain: 'solana:devnet',
 };
+const MESSAGE = 'Hello from the example';
 const MEMO = 'Seeker Connect example';
 const MEMO_PROGRAM = address('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr');
 const rpc = createSolanaRpc('https://api.devnet.solana.com');
@@ -56,10 +58,25 @@ function describe(error: unknown): string {
 }
 
 export default function App() {
+	return (
+		<SafeAreaProvider>
+			<ExampleScreen />
+		</SafeAreaProvider>
+	);
+}
+
+function ExampleScreen() {
+	const darkTheme = useColorScheme() === 'dark';
+	const colors = {
+		background: darkTheme ? '#0D1615' : '#FFFFFF',
+		foreground: darkTheme ? '#FFFFFF' : '#000000',
+		muted: darkTheme ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+	};
+
 	/** The connected account; null while disconnected. */
 	const [account, setAccount] = useState<Address | null>(null);
 	const [busy, setBusy] = useState(false);
-	/** Results of past actions, newest last. */
+	/** Results of past actions, oldest first. */
 	const [log, setLog] = useState<string[]>([]);
 	const running = useRef(false);
 
@@ -109,50 +126,135 @@ export default function App() {
 			return result.address;
 		});
 
+	const signMessage = (signer: Address) =>
+		run('signMessage', async () => {
+			const [signed] = await SeekerConnect.signMessages(
+				[signer],
+				[new Uint8Array(getUtf8Encoder().encode(MESSAGE))],
+			);
+			return `${signed.length} bytes`;
+		});
+
+	const signTransaction = (feePayer: Address) =>
+		run('signTransaction', async () => {
+			const [signed] = await SeekerConnect.signTransactions([await memoTransaction(feePayer)]);
+			return `${signed.length} bytes`;
+		});
+
 	const signAndSend = (feePayer: Address) =>
 		run('signAndSendTransaction', async () => {
 			const [signature] = await SeekerConnect.signAndSendTransactions([await memoTransaction(feePayer)]);
 			return getBase58Decoder().decode(signature);
 		});
 
+	const disconnect = () =>
+		run('disconnect', async () => {
+			await SeekerConnect.disconnect();
+			setAccount(null);
+			return 'done';
+		});
+
+	const theme = darkTheme ? 'dark' : 'light';
+	const action = (label: string, onPress: () => void) => (
+		<Pressable
+			key={label}
+			disabled={busy}
+			onPress={onPress}
+			style={[styles.action, { borderColor: colors.foreground }, busy && styles.disabled]}
+		>
+			<Text style={[styles.actionLabel, { color: colors.foreground }]}>{label}</Text>
+		</Pressable>
+	);
+
 	return (
-		<View style={styles.screen}>
-			{account === null ? (
-				<>
-					<SeekerConnectButton style={styles.seekerButton} enabled={!busy} onPress={connect} />
-					<SeekerConnectButton
-						style={styles.seekerButton}
-						variant="sign-in"
-						enabled={!busy}
-						onPress={signIn}
-					/>
-				</>
-			) : (
-				<>
-					<Text>Connected as {account}</Text>
-					<Button title="Sign and send a memo" disabled={busy} onPress={() => signAndSend(account)} />
-				</>
-			)}
-			<ScrollView style={styles.log}>
-				{log.map((line, index) => (
-					<Text key={index}>{line}</Text>
-				))}
+		<SafeAreaView style={[styles.screen, { backgroundColor: colors.background }]}>
+			<ScrollView contentContainerStyle={styles.content}>
+				<View>
+					<Text style={[styles.title, { color: colors.foreground }]}>Seeker Connect</Text>
+					<Text style={[styles.subtitle, { color: colors.muted }]}>Example dapp</Text>
+				</View>
+				{account === null ? (
+					<>
+						<SeekerConnectButton
+							style={styles.seekerButton}
+							theme={theme}
+							enabled={!busy}
+							onPress={connect}
+						/>
+						<SeekerConnectButton
+							style={styles.seekerButton}
+							variant="sign-in"
+							theme={theme}
+							enabled={!busy}
+							onPress={signIn}
+						/>
+					</>
+				) : (
+					<>
+						<Text style={[styles.label, { color: colors.muted }]}>CONNECTED AS</Text>
+						<Text style={[styles.mono, { color: colors.foreground }]}>{account}</Text>
+						{action('Sign message', () => signMessage(account))}
+						{action('Sign transaction', () => signTransaction(account))}
+						{action('Sign and send transaction', () => signAndSend(account))}
+						{action('Sign in', signIn)}
+						{action('Disconnect', disconnect)}
+					</>
+				)}
+				<Text style={[styles.label, { color: colors.muted }]}>ACTIVITY</Text>
+				{log.length === 0 ? (
+					<Text style={[styles.subtitle, { color: colors.muted }]}>No activity yet.</Text>
+				) : (
+					log.map((line, index) => (
+						<Text key={index} style={[styles.mono, { color: colors.muted }]}>
+							{`${index + 1}. ${line}`}
+						</Text>
+					))
+				)}
 			</ScrollView>
-		</View>
+		</SafeAreaView>
 	);
 }
 
 const styles = StyleSheet.create({
-	log: {
-		flex: 1,
+	action: {
+		alignItems: 'center',
+		borderRadius: 20,
+		borderWidth: 1,
+		height: 40,
+		justifyContent: 'center',
+	},
+	actionLabel: {
+		fontSize: 14,
+		fontWeight: '500',
+	},
+	content: {
+		gap: 12,
+		padding: 24,
+	},
+	disabled: {
+		opacity: 0.4,
+	},
+	label: {
+		fontSize: 13,
+		fontWeight: '500',
+		letterSpacing: 1,
+	},
+	mono: {
+		fontFamily: 'monospace',
+		fontSize: 13,
 	},
 	screen: {
 		flex: 1,
-		gap: 12,
-		padding: 16,
 	},
 	seekerButton: {
 		alignSelf: 'stretch',
 		height: 56,
+	},
+	subtitle: {
+		fontSize: 13,
+	},
+	title: {
+		fontSize: 22,
+		fontWeight: '500',
 	},
 });
