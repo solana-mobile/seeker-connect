@@ -69,7 +69,8 @@ class SeekerConnectButtonManager : SimpleViewManager<ComposeView>() {
         override fun getEventData(): WritableMap = Arguments.createMap()
 
         companion object {
-            const val NAME = "topSeekerConnectPress"
+            // React Native pairs a direct event `topX` with the prop `onX`.
+            const val NAME = "topPress"
         }
     }
 

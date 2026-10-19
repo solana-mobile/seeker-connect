@@ -10,6 +10,17 @@ a native module over the
 npm install @solana-mobile/seeker-connect-react-native
 ```
 
+## Identity
+
+`identity.uri` must be your dapp's absolute `https` URL. Wallets use it to verify and show who is asking. A custom
+scheme such as `myapp://` is not accepted: the wallet ends the session.
+
+```ts
+await SeekerConnect.configure({
+	identity: { name: 'My Dapp', uri: 'https://mydapp.example.com', icon: 'favicon.ico' },
+});
+```
+
 ## Requirements
 
 For now: React Native 0.81 or later (Expo SDK 54 or later), with the Android
