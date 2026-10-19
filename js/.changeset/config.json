@@ -15,5 +15,5 @@
 	"access": "public",
 	"baseBranch": "main",
 	"updateInternalDependencies": "patch",
-	"ignore": ["skr-connect-example-web"]
+	"ignore": ["skr-connect-example-web", "skr-connect-example-react-native"]
 }
