@@ -7,8 +7,6 @@ on:
   # Any base branch, so stacked pull requests are checked too.
   pull_request:
     paths: [ '.github/**', 'js/**', 'android/**' ]
-  release:
-    types: [ published ]
 
 permissions:
   contents: read
