@@ -76,6 +76,8 @@ function ExampleScreen() {
 	/** The connected account; null while disconnected. */
 	const [account, setAccount] = useState<Address | null>(null);
 	const [busy, setBusy] = useState(false);
+	/** False until configure and restore have settled; wallet actions wait for it. */
+	const [ready, setReady] = useState(false);
 	/** Results of past actions, oldest first. */
 	const [log, setLog] = useState<string[]>([]);
 	const running = useRef(false);
@@ -90,7 +92,9 @@ function ExampleScreen() {
 				setAccount(address(restored.accounts[0].address));
 				append(`restored ${restored.accounts[0].address}`);
 			}
-		})().catch((error) => append(`restore failed: ${describe(error)}`));
+		})()
+			.catch((error) => append(`restore failed: ${describe(error)}`))
+			.finally(() => setReady(true));
 	}, [append]);
 
 	/** Runs [action] unless another action is running. */
@@ -158,9 +162,9 @@ function ExampleScreen() {
 	const action = (label: string, onPress: () => void) => (
 		<Pressable
 			key={label}
-			disabled={busy}
+			disabled={busy || !ready}
 			onPress={onPress}
-			style={[styles.action, { borderColor: colors.foreground }, busy && styles.disabled]}
+			style={[styles.action, { borderColor: colors.foreground }, (busy || !ready) && styles.disabled]}
 		>
 			<Text style={[styles.actionLabel, { color: colors.foreground }]}>{label}</Text>
 		</Pressable>
@@ -178,14 +182,14 @@ function ExampleScreen() {
 						<SeekerConnectButton
 							style={styles.seekerButton}
 							theme={theme}
-							enabled={!busy}
+							enabled={!busy && ready}
 							onPress={connect}
 						/>
 						<SeekerConnectButton
 							style={styles.seekerButton}
 							variant="sign-in"
 							theme={theme}
-							enabled={!busy}
+							enabled={!busy && ready}
 							onPress={signIn}
 						/>
 					</>

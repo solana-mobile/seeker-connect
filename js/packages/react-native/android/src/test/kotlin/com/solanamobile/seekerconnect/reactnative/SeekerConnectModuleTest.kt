@@ -55,6 +55,11 @@ class SeekerConnectModuleTest {
     }
 
     @Test
+    fun `configure rejects a config without an identity instead of throwing`() {
+        assertEquals(SeekerConnectModule.INVALID_ARGUMENT, call { module.configure(JavaOnlyMap(), it) }.code)
+    }
+
+    @Test
     fun `reports wallet availability by name`() {
         link.availability = WalletAvailability.OTHER
         assertEquals("OTHER", call { module.walletAvailability(it) }.value)

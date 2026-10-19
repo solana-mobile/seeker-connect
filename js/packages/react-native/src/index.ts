@@ -274,6 +274,9 @@ export interface SeekerConnectButtonProps extends ViewProps {
 	onPress?: (event: NativeSyntheticEvent<Record<string, never>>) => void;
 }
 
-/** The "… with Seeker" button, drawn natively. */
+/**
+ * The "… with Seeker" button, drawn natively. Give it a size in `style`: React Native can't measure the native view,
+ * so without one it renders at zero size. The design's height is 56.
+ */
 export const SeekerConnectButton: HostComponent<SeekerConnectButtonProps> =
 	requireNativeComponent<SeekerConnectButtonProps>('SeekerConnectButton');

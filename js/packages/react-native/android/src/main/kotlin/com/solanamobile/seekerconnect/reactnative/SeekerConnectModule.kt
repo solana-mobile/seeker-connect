@@ -49,7 +49,13 @@ class SeekerConnectModule internal constructor(
 
     @ReactMethod
     fun configure(config: ReadableMap, promise: Promise) {
-        client = newClient(config)
+        client = try {
+            newClient(config)
+        } catch (e: IllegalArgumentException) {
+            return promise.reject(INVALID_ARGUMENT, e.message, e)
+        } catch (e: RuntimeException) {
+            return promise.reject(UNEXPECTED_ERROR, e.message, e)
+        }
         promise.resolve(null)
     }
 
