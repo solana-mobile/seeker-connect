@@ -5,6 +5,7 @@
 	"fixed": [
 		[
 			"@solana-mobile/seeker-connect-core",
+			"@solana-mobile/seeker-connect-react-native",
 			"@solana-mobile/seeker-connect-ui",
 			"@solana-mobile/seeker-connect-wallet-standard",
 			"@solana-mobile/seeker-connect-web"
@@ -14,5 +15,5 @@
 	"access": "public",
 	"baseBranch": "main",
 	"updateInternalDependencies": "patch",
-	"ignore": ["skr-connect-example-web"]
+	"ignore": ["skr-connect-example-web", "skr-connect-example-react-native"]
 }

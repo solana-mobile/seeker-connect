@@ -1,0 +1,9 @@
+{
+	"extends": "@react-native/typescript-config",
+	"compilerOptions": {
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"types": []
+	},
+	"include": ["**/*.ts", "**/*.tsx"],
+	"exclude": ["**/node_modules"]
+}
