@@ -1,0 +1,86 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
+plugins {
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.compose
+    id 'jacoco'
+}
+
+android {
+    namespace = "com.solanamobile.seekerconnect.compose"
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk 23
+    }
+
+    buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlin {
+        // The kotlin-stdlib version consumers resolve; Kotlin 2.1 compilers can't read a newer one.
+        coreLibrariesVersion = "2.1.20"
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+            // Readable by consumers on Kotlin 2.1 (React Native apps).
+            languageVersion = KotlinVersion.KOTLIN_2_1
+            apiVersion = KotlinVersion.KOTLIN_2_1
+        }
+    }
+
+    buildFeatures {
+        buildConfig = false
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            all {
+                jacoco {
+                    includeNoLocationClasses = true
+                    excludes = ['jdk.internal.*']
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    api project(':seeker-connect-core')
+    api platform(libs.compose.bom)
+    api libs.compose.ui
+    implementation libs.compose.material3
+
+    testImplementation libs.kotlin.test.junit
+    testImplementation libs.compose.ui.test.junit4
+    testImplementation libs.robolectric
+    testImplementation libs.androidx.test.core
+    debugImplementation libs.compose.ui.test.manifest
+}
+
+def coverageVerification = tasks.register('jacocoDebugUnitTestCoverageVerification', JacocoCoverageVerification) {
+    dependsOn 'testDebugUnitTest'
+    executionData.from(layout.buildDirectory.file('outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec'))
+    classDirectories.from(layout.buildDirectory.dir('intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes'))
+    sourceDirectories.from('src/main/kotlin')
+    violationRules {
+        rule {
+            // The exhaustive `when` over `Shown?` has a compiler-generated NoWhenBranchMatchedException line that cannot execute (1),
+            // and BrandVector's Canvas draw block (6) isn't exercised: Robolectric doesn't draw Compose 1.11 content.
+            limit {
+                counter = 'LINE'
+                value = 'MISSEDCOUNT'
+                maximum = 7
+            }
+        }
+    }
+}
+tasks.named('check') { dependsOn coverageVerification }

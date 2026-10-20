@@ -80,11 +80,11 @@ imperative `-web` path, configuration, and the error taxonomy — see the
 
 ## Targets
 
-Three dapp-side targets, built in this order:
+Three dapp-side targets:
 
 1. **Web** (`js/`) — custom Wallet Standard implementation over the low-level MWA protocol package. (Shipping.)
-2. **React Native** (`js/`) — over the MWA native module. (Planned.)
-3. **Android Kotlin** (`android/`) — gated on an upstream MWA patch. (Planned.)
+2. **Android Kotlin** (`android/`) — Kotlin-native client over MWA `clientlib`, local WebSocket transport, Compose UI. See [`android/seeker-connect`](android/seeker-connect/README.md).
+3. **React Native** (`js/`) — over the MWA native module. (Planned.)
 
 ## Repository layout
 
@@ -99,7 +99,11 @@ seeker-connect/
 │   └── examples/
 │       └── example-web/      Vite + React demo consuming Wallet Standard directly,
 │                             plus the browser E2E harness (`pnpm e2e`)
-└── android/     Android Kotlin SDK (Gradle) — added in the Android phase
+└── android/     Android Kotlin SDK (Gradle)
+    ├── seeker-connect-core/     plain-Kotlin client, SeekerLink port, error taxonomy, contract-test suite
+    ├── seeker-connect/          Android SDK: MWA clientlib adapter, wallet pre-check, auth cache
+    ├── seeker-connect-compose/  Seeker-Connect-owned UI (Compose): progress/error cards, connect button
+    └── example/                 Compose demo app
 ```
 
 The Wallet Standard package is non-negotiable: whatever other entry points
