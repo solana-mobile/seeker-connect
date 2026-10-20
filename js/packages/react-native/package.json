@@ -1,6 +1,6 @@
 {
 	"name": "@solana-mobile/seeker-connect-react-native",
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"description": "React Native SDK for Seeker Connect: a native module over the Android Seeker Connect SDK.",
 	"keywords": [
 		"solana",

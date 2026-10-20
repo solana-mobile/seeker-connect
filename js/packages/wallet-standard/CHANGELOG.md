@@ -1,5 +1,13 @@
 # @solana-mobile/seeker-connect-wallet-standard
 
+## 0.2.0
+
+### Patch Changes
+
+- @solana-mobile/seeker-connect-core@0.2.0
+- @solana-mobile/seeker-connect-ui@0.2.0
+- @solana-mobile/seeker-connect-web@0.2.0
+
 ## 0.1.2
 
 ### Patch Changes
