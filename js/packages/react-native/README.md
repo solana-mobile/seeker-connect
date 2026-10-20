@@ -12,8 +12,9 @@ npm install @solana-mobile/seeker-connect-react-native
 
 ## Identity
 
-`identity.uri` must be your dapp's absolute `https` URL. Wallets use it to verify and show who is asking. A custom
-scheme such as `myapp://` is not accepted: the wallet ends the session.
+`identity.uri` is your dapp's URI, which wallets use to verify and show who is asking. Mobile Wallet Adapter requires
+an absolute, hierarchical URI. Use your dapp's `https` URL: the Seeker wallet has been seen ending the session for a
+custom-scheme URI such as `myapp://`.
 
 ```ts
 await SeekerConnect.configure({
