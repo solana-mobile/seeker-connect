@@ -148,6 +148,13 @@ corepack pnpm e2e
 The example app itself: `corepack pnpm dev` in `js/examples/example-web`
 (config via URL params — see `src/config.ts`).
 
+## Get involved
+
+Found a bug or have an idea?
+[Open an issue](https://github.com/solana-mobile/seeker-connect/issues/new) with
+a minimal reproduction. Pull requests are limited to collaborators; see
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 
 Apache-2.0.
