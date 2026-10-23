@@ -41,11 +41,32 @@ beforeEach(() => {
 });
 
 describe('SeekerConnect', () => {
-	it('passes the config to the native module', async () => {
+	it('passes the config to the native module', () => {
 		const config = { identity: { name: 'Dapp', uri: 'https://dapp.example.com' } };
-		native.configure.mockResolvedValue(null);
-		await SeekerConnect.configure(config);
+		native.configure.mockReturnValue(null);
+		SeekerConnect.configure(config);
 		expect(native.configure).toHaveBeenCalledWith(config);
+	});
+
+	it('throws the error configure returns', () => {
+		native.configure.mockReturnValue({ code: 'INVALID_ARGUMENT', message: 'identity is required' });
+		const config = { identity: { name: 'Dapp', uri: 'https://dapp.example.com' } };
+		const error = (() => {
+			try {
+				SeekerConnect.configure(config);
+			} catch (e) {
+				return e;
+			}
+		})();
+		expect(error).toBeInstanceOf(SeekerConnectError);
+		expect((error as SeekerConnectError).code).toBe('invalid-argument');
+		expect((error as SeekerConnectError).message).toBe('identity is required');
+	});
+
+	it('throws not-configured from configure when the native module is not linked', () => {
+		nativeModules.SeekerConnect = undefined;
+		const config = { identity: { name: 'Dapp', uri: 'https://dapp.example.com' } };
+		expect(() => SeekerConnect.configure(config)).toThrow(SeekerConnectError);
 	});
 
 	it('reports wallet availability in lower case', async () => {

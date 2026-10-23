@@ -43,20 +43,27 @@ class SeekerConnectModule internal constructor(
     )
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    @Volatile
     private var client: SeekerConnect<ComponentActivity>? = null
 
     override fun getName() = NAME
 
-    @ReactMethod
-    fun configure(config: ReadableMap, promise: Promise) {
+    /** Returns null once configured, or `{ code, message }`: a thrown error would lose its code crossing the bridge. */
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    fun configure(config: ReadableMap): WritableMap? {
         client = try {
             newClient(config)
         } catch (e: IllegalArgumentException) {
-            return promise.reject(INVALID_ARGUMENT, e.message, e)
+            return error(INVALID_ARGUMENT, e)
         } catch (e: RuntimeException) {
-            return promise.reject(UNEXPECTED_ERROR, e.message, e)
+            return error(UNEXPECTED_ERROR, e)
         }
-        promise.resolve(null)
+        return null
+    }
+
+    private fun error(code: String, e: Exception) = values.newMap().apply {
+        putString("code", code)
+        putString("message", e.message)
     }
 
     @ReactMethod

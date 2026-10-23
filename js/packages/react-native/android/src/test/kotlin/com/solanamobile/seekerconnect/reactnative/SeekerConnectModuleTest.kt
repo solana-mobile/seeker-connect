@@ -44,7 +44,7 @@ class SeekerConnectModuleTest {
 
     @BeforeTest
     fun configure() {
-        call { module.configure(config, it) }
+        assertNull(module.configure(config))
         context.onHostResume(activity)
     }
 
@@ -55,8 +55,8 @@ class SeekerConnectModuleTest {
     }
 
     @Test
-    fun `configure rejects a config without an identity instead of throwing`() {
-        assertEquals(SeekerConnectModule.INVALID_ARGUMENT, call { module.configure(JavaOnlyMap(), it) }.code)
+    fun `configure returns an error for a config without an identity instead of throwing`() {
+        assertEquals(SeekerConnectModule.INVALID_ARGUMENT, module.configure(JavaOnlyMap())?.getString("code"))
     }
 
     @Test

@@ -17,7 +17,7 @@ an absolute, hierarchical URI. Use your dapp's `https` URL: the Seeker wallet ha
 custom-scheme URI such as `myapp://`.
 
 ```ts
-await SeekerConnect.configure({
+SeekerConnect.configure({
 	identity: { name: 'My Dapp', uri: 'https://mydapp.example.com', icon: 'favicon.ico' },
 });
 ```

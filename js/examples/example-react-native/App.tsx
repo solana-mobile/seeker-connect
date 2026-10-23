@@ -87,7 +87,7 @@ function ExampleScreen() {
 	useEffect(() => {
 		(async () => {
 			try {
-				await SeekerConnect.configure(CONFIG);
+				SeekerConnect.configure(CONFIG);
 			} catch (error) {
 				// Unconfigured, every wallet action would fail: leave them disabled.
 				append(`configure failed: ${describe(error)}`);

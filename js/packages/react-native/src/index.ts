@@ -138,7 +138,7 @@ interface NativeSignInResult {
 }
 
 interface NativeSeekerConnect {
-	configure(config: SeekerConnectConfig): Promise<null>;
+	configure(config: SeekerConnectConfig): { code: string; message: string | null } | null;
 	walletAvailability(): Promise<'CERTIFIED' | 'OTHER' | 'NONE'>;
 	restore(): Promise<NativeAuthorization | null>;
 	connect(): Promise<NativeAuthorization>;
@@ -207,10 +207,10 @@ function nativeRequest(request: SeekerRequest): unknown {
  * activity.
  */
 export const SeekerConnect = {
-	configure: (config: SeekerConnectConfig): Promise<void> =>
-		bridge(async (native) => {
-			await native.configure(config);
-		}),
+	configure: (config: SeekerConnectConfig): void => {
+		const error = nativeModule().configure(config);
+		if (error) throw new SeekerConnectError(ERROR_CODES[error.code] ?? 'wallet-error', error.message ?? error.code);
+	},
 
 	/** Which wallet a connection would reach, without launching anything. */
 	walletAvailability: (): Promise<WalletAvailability> =>
